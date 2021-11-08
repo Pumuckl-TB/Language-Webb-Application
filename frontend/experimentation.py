@@ -8,14 +8,14 @@ app = dash.Dash()
 app.layout = html.Div(children=[
     html.Div(className='row',  # Define the row element
         children=[ # Define the left element
-            html.Div(className='four columns div-user-controls',
+            html.Div(className='three columns div-user-controls',
                 children = [
                     html.H2('Teacher View',style={'color': 'white'}),
                     html.P('''Select student to view''',style={'color': 'white'}),
                 ],
                 style={'backgroundColor': '#1E1E1E'}),
             
-            html.Div(className='eight columns div-for-charts bg-grey', # Define the right element
+            html.Div(className='nine columns div-user-controls bg-grey', # Define the right element
                 children = [
                     html.H2('Right Side Element',style={'color': 'white'}),
                     html.P('''Bla Bla Bla''',style={'color': 'white'}),

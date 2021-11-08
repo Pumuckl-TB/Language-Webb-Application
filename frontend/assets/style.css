@@ -229,15 +229,15 @@ a:hover {
 
 
 .main-svg{
-  font-family: "Open Sans Semi Bold"
+  font-family: "Arial"
 }
 
 .gtitle{
-  font-family: "Open Sans Semi Bold" !important
+  font-family: "Arial" !important
 }
 
 .g-title{
-  font-family: "Open Sans Semi Bold"
+  font-family: "Arial"
 }
 
 
@@ -431,13 +431,13 @@ body {
 }
 
 h1, h2, h3, h4, h5 {
-  font-family: "Open Sans Semi Bold";
+  font-family: "Arial";
   letter-spacing: 2.1px;
   font-size: 21px;
   padding-left: 12px;
 }
 p {
-  font-family: "Open Sans Light";
+  font-family: "Arial Light";
   font-weight: 400;
   font-size: 14px;
   padding-left: 12px;
@@ -523,7 +523,7 @@ a {
 
 #date {
   background-color: #1e1e1e;
-  font-family: "Open Sans Light";
+  font-family: "Arial Light";
   font-weight: 400;
   color: #dbdbdb;
   border: 0.5px solid #dbdbdb44;
@@ -603,7 +603,7 @@ a {
  .side-by-side-right{
     display: inline-block;
     width: 48%;
-    float:right;
+    /* float:right; */
   }
   .div-for-charts{
     margin: 0px;
