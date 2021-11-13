@@ -6,7 +6,7 @@ from dash.dependencies import Input, Output
 app = dash.Dash()
 
 app.layout = html.Div([
-    html.H1("Simple iînput example"),
+    html.H1("Simple input example"),
     dcc.Input(
         id='input-x',
         placeholder='Insert x value',
