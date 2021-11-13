@@ -285,7 +285,7 @@ input[type="email"], input[type="number"], input[type="search"], input[type="tex
   border-radius: 4px;
   box-shadow: none;
   box-sizing: border-box;
-  font-family: inherit;
+  font-family: Arial;
   font-size: inherit;
  /*https://stackoverflow.com/questions/6080413/why-doesnt-input-inherit-the-font-from-body*/
 }
@@ -355,10 +355,14 @@ th:last-child, td:last-child {
 }
 /* Spacing –––––––––––––––––––––––––––––––––––––––––––––––––– */
 button, .button {
-  margin-bottom: 0rem;
+  margin-bottom: 0.5rem;
+  margin-left: 0.5rem;
+  margin-right: 0.5rem;
 }
 input, textarea, select, fieldset {
-  margin-bottom: 0rem;
+  margin-bottom: 0.5rem;
+  margin-left: 0.5rem;
+  margin-right: 0.5rem;
 }
 pre, dl, figure, table, form {
   margin-bottom: 0rem;
@@ -448,6 +452,9 @@ a {
 .bg-grey{
   background-color: #31302F;
 }
+.bg-lightgrey{
+    background-color: #4e4c4a;
+}
 .text-padding{
   padding: 5px;
 }
@@ -472,11 +479,11 @@ a {
   padding-left: 55px;
   padding-top: 64px;
 }
-.div-for-dropdown {
+.div-dropdown {
   padding-top: 12px;
   padding-bottom: 12px;
 }
-.div-for-slider {
+.div-slider {
   width: 97%;
   text-align: center;
 }
