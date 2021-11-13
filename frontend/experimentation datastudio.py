@@ -11,7 +11,13 @@ app.layout = html.Div(children=[
             html.Div(className='three columns div-user-controls',
                 children = [
                     html.H2('Teacher View',style={'color': 'white'}),
-                    html.P('''Select student to view''',style={'color': 'white'}),
+                    html.Br(),
+                    html.Br(),
+                    html.P('''Admin Page''',style={'color': 'white'}),
+                    html.Br(),
+                    html.P('''Exercises''',style={'color': 'white'}),
+                    html.Br(),
+                    html.P('''Dashboard''',style={'color': 'white'}),
                 ],
                 style={'backgroundColor': '#1E1E1E'}),
             
@@ -23,6 +29,7 @@ app.layout = html.Div(children=[
                         style={
                             'height' : '1067px', 'width' : '70%'}
                             ) 
+                            
             ])
         ])
 ])
