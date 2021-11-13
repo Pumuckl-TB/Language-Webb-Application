@@ -18,11 +18,10 @@ app.layout = html.Div(children=[
             html.Div(className='nine columns div-user-controls bg-grey', # Define the right element
                 children = [
                     html.H2('Right Side Element',style={'color': 'white'}),
-                    html.P('''Bla Bla Bla''',style={'color': 'white'}),
-                    html.Img(src='https://raw.githubusercontent.com/feljost/Language-WebApp/main/frontend/pictures/Placeholder_studenttable.png',
+                    html.P('''Data Studio Dashboard''',style={'color': 'white'}),
+                    html.Iframe(src="https://datastudio.google.com/embed/reporting/864eff7d-2c84-4880-a0ee-4be8e203c449/page/zuQfC",
                         style={
-                            'height' : '50%',
-                            'width' : '50%'}
+                            'height' : '1067px', 'width' : '70%'}
                             ) 
             ])
         ])
