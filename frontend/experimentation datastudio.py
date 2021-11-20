@@ -13,11 +13,12 @@ app.layout = html.Div(children=[
                     html.H2('Teacher View',style={'color': 'white'}),
                     html.Br(),
                     html.Br(),
-                    html.P('''Admin Page''',style={'color': 'white'}),
+                    html.A("Admin Page", href='https://plot.ly', style={'color': 'white'}), #replace the link!
+                    #html.link('''''',style={'color': 'white'}),
                     html.Br(),
-                    html.P('''Exercises''',style={'color': 'white'}),
+                    html.A("Exercise", href='https://plot.ly', style={'color': 'white'}), #replace the link!
                     html.Br(),
-                    html.P('''Dashboard''',style={'color': 'white'}),
+                    html.A("Dashboard", href='https://plot.ly', style={'color': 'white'}), #replace the link!
                 ],
                 style={'backgroundColor': '#1E1E1E'}),
             
