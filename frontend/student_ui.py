@@ -6,7 +6,7 @@ from dash.dependencies import Input, Output, State, MATCH, ALL
 import pandas as pd
 import dash_bootstrap_components as dbc
 import re
-from itertools import repeat
+import time
 
 
 ##################### Intialise Students ######################
@@ -23,10 +23,10 @@ students = {
 exercise1 = {
     'grammar_section' : 'Grammar Section...',
     'block_name' : 'Normal Exercise',
-    'tasks' : ['Die Heimatstadt des [Mann] ist Porto.',
+    'tasks' : ['[Die] Heimatstadt des Mann ist Porto',
         'Ich sehe den [schnellen] Mann.', 
-        'Dieses seminar ist [zuviel] Arbeit.', 
-        'Ich wünschte ich [hätte] es nie gewhält.']
+        'Dieses [seminar] ist [zuviel] Arbeit.', 
+        'Ich wünschte ich [hätte] es nie [gewhält]']
     }
 
 exercise2 = {
@@ -70,10 +70,11 @@ def create_task_block(id, type = 'ML'):
            otherwise the same is done but for .... -hottopic
             a. initialise output list
             b. add 1 line consisting of: 
-                i. start of task
-                ii. task solution (saved as hidden html.P & add text entry form)
-                iii. end of task 
-                iv. Solution container showing if it is correct or not
+                Start of task, blank, end of task (len <= 3)
+                OR
+                Start of task, blank, further text, blank, end of task (len >3)
+            c. concatenate all lines
+        3. Return finished "Exercise Block"
 
     Many of the values are updated via callbacks at the bottom
     '''
@@ -89,28 +90,56 @@ def create_task_block(id, type = 'ML'):
 
         output = []
         for i in range(0,len(tasks_split)):
-            task_line = html.Div(
-                children=[
-                    html.P(tasks_split[i][0], style={'display': 'inline-block'}),
-                    dcc.Input(id={'type':'dynamic-input-ml','index':i}, value='', type="text", className='input'),
-                    html.P(id={'type':'dynamic-solution-ml','index':i}, children = tasks_split[i][1], hidden=True), # stores the solution (needed for later)
-                    html.P(tasks_split[i][2], style={'display': 'inline-block'}),
-                    html.Div(id={'type':'dynamic-output-ml','index':i}, style={'display': 'inline-block', 'color':'red'})
-                ])
+            if len(tasks_split[i])<=3: # task has a maximum of 1 blank
+                task_line = html.Div(
+                    children=[
+                        html.P(tasks_split[i][0], style={'display': 'inline-block'}),
+                        dcc.Input(id={'type':'dynamic-input-ml0','index':i}, value='', type="text", className='input'),
+                        html.P(id={'type':'dynamic-solution-ml0','index':i}, children = tasks_split[i][1], hidden=True), # stores the solution (needed for later)
+                        html.P(tasks_split[i][2], style={'display': 'inline-block'}),
+                        html.Div(id={'type':'dynamic-output-ml0','index':i}, style={'display': 'inline-block', 'color':'red'})
+                    ])
+            if len(tasks_split[i])>3: # task has 2 blanks
+                task_line = html.Div(
+                    children=[
+                        html.P(tasks_split[i][0], style={'display': 'inline-block'}),
+                        dcc.Input(id={'type':'dynamic-input-ml0','index':i}, value='', type="text", className='input'),
+                        html.P(id={'type':'dynamic-solution-ml0','index':i}, children = tasks_split[i][1], hidden=True), # stores the solution (needed for later)
+                        html.P(tasks_split[i][2], style={'display': 'inline-block'}),
+                        html.Div(id={'type':'dynamic-output-ml0','index':i}, style={'display': 'inline-block', 'color':'red'}),
+                        dcc.Input(id={'type':'dynamic-input-ml1','index':i}, value='', type="text", className='input'),
+                        html.P(id={'type':'dynamic-solution-ml1','index':i}, children = tasks_split[i][3], hidden=True), # stores the solution (needed for later)
+                        html.P(tasks_split[i][4], style={'display': 'inline-block'}),
+                        html.Div(id={'type':'dynamic-output-ml1','index':i}, style={'display': 'inline-block', 'color':'red'})
+                    ])
             output.append(task_line)
 
     elif type == 'Hot Topic':
         
         output = []
         for i in range(0,len(tasks_split)):
-            task_line = html.Div(
-                children=[
-                    html.P(tasks_split[i][0], style={'display': 'inline-block'}),
-                    dcc.Input(id={'type':'dynamic-input-hottopic','index':i}, value='', type="text", className='input'),
-                    html.P(id={'type':'dynamic-solution-hottopic','index':i}, children = tasks_split[i][1], hidden=True), # stores the solution (needed for later)
-                    html.P(tasks_split[i][2], style={'display': 'inline-block'}),
-                    html.Div(id={'type':'dynamic-output-hottopic','index':i}, style={'display': 'inline-block', 'color':'red'})
-                ])
+            if len(tasks_split[i])==3:
+                task_line = html.Div(
+                    children=[
+                        html.P(tasks_split[i][0], style={'display': 'inline-block'}),
+                        dcc.Input(id={'type':'dynamic-input-hottopic0','index':i}, value='', type="text", className='input'),
+                        html.P(id={'type':'dynamic-solution-hottopic0','index':i}, children = tasks_split[i][1], hidden=True), # stores the solution (needed for later)
+                        html.P(tasks_split[i][2], style={'display': 'inline-block'}),
+                        html.Div(id={'type':'dynamic-output-hottopic0','index':i}, style={'display': 'inline-block', 'color':'red'})
+                    ])
+            if len(tasks_split[i])>3:
+                task_line = html.Div(
+                    children=[
+                        html.P(tasks_split[i][0], style={'display': 'inline-block'}),
+                        dcc.Input(id={'type':'dynamic-input-hottopic0','index':i}, value='', type="text", className='input'),
+                        html.P(id={'type':'dynamic-solution-hottopic0','index':i}, children = tasks_split[i][1], hidden=True), # stores the solution (needed for later)
+                        html.P(tasks_split[i][2], style={'display': 'inline-block'}),
+                        html.Div(id={'type':'dynamic-output-hottopic0','index':i}, style={'display': 'inline-block', 'color':'red'}),
+                        dcc.Input(id={'type':'dynamic-input-hottopic1','index':i}, value='', type="text", className='input'),
+                        html.P(id={'type':'dynamic-solution-hottopic1','index':i}, children = tasks_split[i][3], hidden=True), # stores the solution (needed for later)
+                        html.P(tasks_split[i][4], style={'display': 'inline-block'}),
+                        html.Div(id={'type':'dynamic-output-hottopic1','index':i}, style={'display': 'inline-block', 'color':'red'})
+                    ])
             output.append(task_line)
 
     return output
@@ -133,8 +162,6 @@ app.layout = html.Div(children=[
         className='dropdown'    
     ),style={"width": "20%"}),
     html.Div(id='output_temp'),
-
-
     html.H3('Machine Learning Exercise'),
     # ML block type
     html.Div(children = create_task_block(id, type = 'ML'), id = 'block-container-ml'),      
@@ -143,47 +170,14 @@ app.layout = html.Div(children=[
     
     html.H3('Hot Topic Exercise'),
     # Hot Topic block type
-    html.Div(children = create_task_block(id, type = 'Hot Topic'), id = 'block-container-hottopic')      
+    html.Div(children = create_task_block(id, type = 'Hot Topic'), id = 'block-container-hottopic'),
+    html.Br(),
+    html.Button('Click when finished', id='finish-button', n_clicks=0, className='button'),
+    html.Div(id='time-elapsed-container'),
+    html.Div(id='start-time',hidden=True)     
 ])
 
 ################## CALLBACKS AND FUNCTIONS #################
-
-# Initialise range of tasks
-
-
-# Checking entries of first block
-@app.callback(
-    Output({'type': 'dynamic-output-ml', 'index': MATCH}, 'children'),
-    Input({'type': 'dynamic-input-ml', 'index': MATCH}, 'value'),
-    Input({'type': 'dynamic-solution-ml', 'index': MATCH}, 'children'),
-    State=State({'type': 'dynamic-input-ml', 'index': MATCH}, 'value')
-)
-
-def update_taskinput(value,children):
-    print(f'New Input Task: '+ value + ' | Solution: ' + children)
-    
-    if value == str(children):
-        return ' ✓ Korrekt'
-    else:
-        return ' ✗ Falsch'
-
-
-# Checking entries of second block
-@app.callback(
-    Output({'type': 'dynamic-output-hottopic', 'index': MATCH}, 'children'),
-    Input({'type': 'dynamic-input-hottopic', 'index': MATCH}, 'value'),
-    Input({'type': 'dynamic-solution-hottopic', 'index': MATCH}, 'children'),
-    State=State({'type': 'dynamic-input-hottopic', 'index': MATCH}, 'value')
-)
-
-def update_taskinput(value,children):
-    print(f'New Input Task: '+ value + ' | Solution: ' + children)
-    
-    if value == str(children):
-        return ' ✓ Korrekt'
-    else:
-        return ' ✗ Falsch'
-
 
 # Callback of select student dropdown ML
 @app.callback(
@@ -201,11 +195,106 @@ def update_taskblock_ml(value):
     Output('block-container-hottopic', 'children'),
     Input('student-selector', 'value'),
 )
-
 def update_taskblock_hottopic(value):
-    print(f'New Student selected: {value}' )
+    print(f'New Student selected: {value}')
     return create_task_block(value, type = 'Hot Topic')
 
+# Callback of select student to start timer
+@app.callback(
+    Output('start-time', 'children'),
+    Input('student-selector', 'value'),
+)
+
+def start_timer(value):
+    start = time.time()
+    return start
+
+
+# Checking entries of first block
+@app.callback(
+    Output({'type': 'dynamic-output-ml0', 'index': MATCH}, 'children'),
+    Input({'type': 'dynamic-input-ml0', 'index': MATCH}, 'value'),
+    Input({'type': 'dynamic-solution-ml0', 'index': MATCH}, 'children'),
+    State=State({'type': 'dynamic-input-ml0', 'index': MATCH}, 'value')
+)
+
+def update_taskinput(value,children):
+    print(f'New Input Task: '+ value + ' | Solution: ' + children)
+    
+    if value == str(children):
+        return ' ✓ Korrekt'
+    else:
+        return ' ✗ Falsch'
+
+# Checking entries of first block
+@app.callback(
+    Output({'type': 'dynamic-output-ml1', 'index': MATCH}, 'children'),
+    Input({'type': 'dynamic-input-ml1', 'index': MATCH}, 'value'),
+    Input({'type': 'dynamic-solution-ml1', 'index': MATCH}, 'children'),
+    State=State({'type': 'dynamic-input-ml1', 'index': MATCH}, 'value')
+)
+
+def update_taskinput(value,children):
+    print(f'New Input Task: '+ value + ' | Solution: ' + children)
+    
+    if value == str(children):
+        return ' ✓ Korrekt'
+    else:
+        return ' ✗ Falsch'
+
+# Checking entries of second block
+@app.callback(
+    Output({'type': 'dynamic-output-hottopic0', 'index': MATCH}, 'children'),
+    Input({'type': 'dynamic-input-hottopic0', 'index': MATCH}, 'value'),
+    Input({'type': 'dynamic-solution-hottopic0', 'index': MATCH}, 'children'),
+    State=State({'type': 'dynamic-input-hottopic0', 'index': MATCH}, 'value')
+)
+
+def update_taskinput(value,children):
+    print(f'New Input Task: '+ value + ' | Solution: ' + children)
+    
+    if value == str(children):
+        return ' ✓ Korrekt'
+    else:
+        return ' ✗ Falsch'
+
+
+@app.callback(
+    Output({'type': 'dynamic-output-hottopic1', 'index': MATCH}, 'children'),
+    Input({'type': 'dynamic-input-hottopic1', 'index': MATCH}, 'value'),
+    Input({'type': 'dynamic-solution-hottopic1', 'index': MATCH}, 'children'),
+    State=State({'type': 'dynamic-input-hottopic1', 'index': MATCH}, 'value')
+)
+
+def update_taskinput(value, children):
+    print(f'New Input Task: '+ value + ' | Solution: ' + children)
+    
+    if value == str(children):
+        return ' ✓ Korrekt'
+    else:
+        return ' ✗ Falsch'
+
+
+
+@app.callback(
+    Output('time-elapsed-container', 'children'),
+    Input('finish-button', 'n_clicks'),
+    Input('start-time', 'children')
+)
+def finish_button_press(n_clicks, children):
+    output = None 
+    # Check if button has been clicked
+    changed_id = [p['prop_id'] for p in dash.callback_context.triggered][0]
+    if 'finish-button' in changed_id and n_clicks>0:
+        end = time.time()
+        start = children
+        output = f'Time elapsed: {(end - start)/60} minutes'
+    else:
+        pass
+
+    # API CALL HERE: write time used to db
+
+    return output
 
 ############# Running the app #############
 
