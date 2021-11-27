@@ -7,7 +7,6 @@ import pandas as pd
 import dash_bootstrap_components as dbc
 
 import base64
-import datetime
 import io
 import pandas as pd
 
@@ -48,9 +47,15 @@ app.layout = html.Div(children=[
 ################## CALLBACKS AND FUNCTIONS #################
 
 def parse_contents(contents, filename):
+    '''
+    This function takes the files uploaded and concatenates them and parses them.
+    The resulting info is saved in a pandas dataframe (df), as well as in a json
+    format (json_file).
+    The function returns a Dash table with some extra info to visualize the uploaded
+    data, however, this is not necessary, just helpful for debugging and visualization.
+    '''
     _, content_string = contents.split(',')
     decoded = base64.b64decode(content_string)
-
 
     if 'csv' in filename:
         df = pd.read_csv(
@@ -74,6 +79,7 @@ def parse_contents(contents, filename):
         ),
     ])
 
+# update the table
 @app.callback(Output('output-data-upload', 'children'),
               Input('upload-data', 'contents'),
               State('upload-data', 'filename'))
