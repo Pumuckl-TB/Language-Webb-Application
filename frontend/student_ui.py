@@ -6,60 +6,114 @@ from dash.dependencies import Input, Output, State, MATCH, ALL
 import pandas as pd
 import dash_bootstrap_components as dbc
 import re
+from itertools import repeat
 
 
+##################### Intialise Students ######################
 
+students = {
+    'ID': [0,1,2,3,4,5], 
+    'Firstname': ['Tatjana','Felix','Räto','Timon','Radu','Debora'], 
+    'Lastname': ['Ferri','Jost','Kessler','Bodmer','Tanase','Costa']
+}
 
-
-##################### Initialise Exercise  #####################
+##################### Initialise Exercise #####################
 # -> to be replaced with Backend: GetExercise()
 
-exercise = {
+exercise1 = {
     'grammar_section' : 'Grammar Section...',
-    'block_name':'Exercise Title...',
+    'block_name' : 'Normal Exercise',
     'tasks' : ['Die Heimatstadt des [Mann] ist Porto.',
         'Ich sehe den [schnellen] Mann.', 
         'Dieses seminar ist [zuviel] Arbeit.', 
         'Ich wünschte ich [hätte] es nie gewhält.']
     }
 
+exercise2 = {
+    'grammar_section' : 'Grammar Section...',
+    'block_name' : 'Tatjana Exercise',
+    'tasks' : ['Die Heimatstadt der [Frau] ist Porto.',
+        'Ich sehe die [schnelle] Frau.']
+    }
+
+exercise_default = {
+    'grammar_section' : 'Please Select Student',
+    'block_name' : 'Please Select Student',
+    'tasks' : ['Please Select Student',
+        'Ich sehe die [schnelle] Frau.']
+    }
+
+
 # split the tasks into [beginning, solution, end]
-tasks = exercise.get('tasks')
-tasks_split = []
+def split_exercise(exercise):
+    tasks = exercise.get('tasks')
+    tasks_split = []
 
-for task in tasks:
-    task_split = re.split('\[|\]', task)
-    tasks_split.append(task_split)
+    for task in tasks:
+        task_split = re.split('\[|\]', task)
+        tasks_split.append(task_split)
 
-num_tasks = len(tasks_split)
+    return tasks_split
 
-
-def generate_task_entry(i):
+id = None
+def create_task_block(id, type = 'ML'):
     '''
     This function generates a line in the website which shows the task to do.
 
     Input: index of which task to take [0, 1, 2, 3, ...]
 
     Logic:
-        1. Create Div Container for the task (all in one line)
-        2. Create first text entry which gets first part of text
-        3. Create Input box where the user will input his solution
-        4. Save middle part of text (= Solution) as a hidden text
-           (This hidden text is needed for the callback later)
-        5. Crate second text entry after the input box which shows
-           last part of text
-        6. Create output which shows either " Correct" or " False"
-           (Text value assigned in callback later)
-    '''
-    output = html.Div(children=[
-        html.P(tasks_split[i][0], style={'display': 'inline-block'}),
-        dcc.Input(id={'type':'dynamic-input','index':i}, value='', type="text", className='input'),
-        html.P(id={'type':'dynamic-solution','index':i}, children = tasks_split[i][1], hidden=True), # stores the solution (needed for later)
-        html.P(tasks_split[i][2], style={'display': 'inline-block'}),
-        html.Div(id={'type':'dynamic-output','index':i}, style={'display': 'inline-block', 'color':'red'})
-        ])
-    return output
+        1. Check StudentID
+            a. If no Student is selected, return message to select student
+            b. If Student is Selected, get Exercise from backend based on studentID (to be ammended with backend commands)
+        2. Check type: if type = ml, the id's are called dynamic-input-ml, dynamic-solution-ml, and dynamic-output-ml, 
+           otherwise the same is done but for .... -hottopic
+            a. initialise output list
+            b. add 1 line consisting of: 
+                i. start of task
+                ii. task solution (saved as hidden html.P & add text entry form)
+                iii. end of task 
+                iv. Solution container showing if it is correct or not
 
+    Many of the values are updated via callbacks at the bottom
+    '''
+    if id == None or id == 'Select Student':
+        return html.H1('Please select student')
+    if id == 0:
+        tasks_split = split_exercise(exercise2)
+
+    if id != 0:
+        tasks_split = split_exercise(exercise1)
+
+    if type == 'ML':
+
+        output = []
+        for i in range(0,len(tasks_split)):
+            task_line = html.Div(
+                children=[
+                    html.P(tasks_split[i][0], style={'display': 'inline-block'}),
+                    dcc.Input(id={'type':'dynamic-input-ml','index':i}, value='', type="text", className='input'),
+                    html.P(id={'type':'dynamic-solution-ml','index':i}, children = tasks_split[i][1], hidden=True), # stores the solution (needed for later)
+                    html.P(tasks_split[i][2], style={'display': 'inline-block'}),
+                    html.Div(id={'type':'dynamic-output-ml','index':i}, style={'display': 'inline-block', 'color':'red'})
+                ])
+            output.append(task_line)
+
+    elif type == 'Hot Topic':
+        
+        output = []
+        for i in range(0,len(tasks_split)):
+            task_line = html.Div(
+                children=[
+                    html.P(tasks_split[i][0], style={'display': 'inline-block'}),
+                    dcc.Input(id={'type':'dynamic-input-hottopic','index':i}, value='', type="text", className='input'),
+                    html.P(id={'type':'dynamic-solution-hottopic','index':i}, children = tasks_split[i][1], hidden=True), # stores the solution (needed for later)
+                    html.P(tasks_split[i][2], style={'display': 'inline-block'}),
+                    html.Div(id={'type':'dynamic-output-hottopic','index':i}, style={'display': 'inline-block', 'color':'red'})
+                ])
+            output.append(task_line)
+
+    return output
 
 
 ######################## Initialise app  ########################
@@ -72,28 +126,37 @@ app.layout = html.Div(children=[
 
     html.H1('Student Exercise View'),
     html.Br(),
-    html.H2('Section: ' + exercise.get('grammar_section')),
-    html.Br(),
-    html.H3('Exercise: ' + exercise.get('block_name')),
-    html.Br(),
+    html.Div(dcc.Dropdown(
+        id='student-selector',
+        options = [{'label': label, 'value': value} for label, value in zip(students.get('Firstname'),students.get('ID'))],
+        value='Select Student',
+        className='dropdown'    
+    ),style={"width": "20%"}),
+    html.Div(id='output_temp'),
 
-    # Task entries
-    html.Div(children=[generate_task_entry(i) for i in range(0,num_tasks)])        
+
+    html.H3('Machine Learning Exercise'),
+    # ML block type
+    html.Div(children = create_task_block(id, type = 'ML'), id = 'block-container-ml'),      
+    
+    html.Br(),
+    
+    html.H3('Hot Topic Exercise'),
+    # Hot Topic block type
+    html.Div(children = create_task_block(id, type = 'Hot Topic'), id = 'block-container-hottopic')      
 ])
-
-
 
 ################## CALLBACKS AND FUNCTIONS #################
 
-# Initialise range of 
-i = range(0,num_tasks)
+# Initialise range of tasks
 
-# Callback of first block
+
+# Checking entries of first block
 @app.callback(
-    Output({'type': 'dynamic-output', 'index': MATCH}, 'children'),
-    Input({'type': 'dynamic-input', 'index': MATCH}, 'value'),
-    Input({'type': 'dynamic-solution', 'index': MATCH}, 'children'),
-    State=State({'type': 'dynamic-input', 'index': MATCH}, 'value')
+    Output({'type': 'dynamic-output-ml', 'index': MATCH}, 'children'),
+    Input({'type': 'dynamic-input-ml', 'index': MATCH}, 'value'),
+    Input({'type': 'dynamic-solution-ml', 'index': MATCH}, 'children'),
+    State=State({'type': 'dynamic-input-ml', 'index': MATCH}, 'value')
 )
 
 def update_taskinput(value,children):
@@ -104,6 +167,44 @@ def update_taskinput(value,children):
     else:
         return ' ✗ Falsch'
 
+
+# Checking entries of second block
+@app.callback(
+    Output({'type': 'dynamic-output-hottopic', 'index': MATCH}, 'children'),
+    Input({'type': 'dynamic-input-hottopic', 'index': MATCH}, 'value'),
+    Input({'type': 'dynamic-solution-hottopic', 'index': MATCH}, 'children'),
+    State=State({'type': 'dynamic-input-hottopic', 'index': MATCH}, 'value')
+)
+
+def update_taskinput(value,children):
+    print(f'New Input Task: '+ value + ' | Solution: ' + children)
+    
+    if value == str(children):
+        return ' ✓ Korrekt'
+    else:
+        return ' ✗ Falsch'
+
+
+# Callback of select student dropdown ML
+@app.callback(
+    Output('block-container-ml', 'children'),
+    Input('student-selector', 'value'),
+)
+
+def update_taskblock_ml(value):
+    print(f'New Student selected: {value}' )
+    return create_task_block(value, type = 'ML')
+
+
+# Callback of select student dropdown hot topic
+@app.callback(
+    Output('block-container-hottopic', 'children'),
+    Input('student-selector', 'value'),
+)
+
+def update_taskblock_hottopic(value):
+    print(f'New Student selected: {value}' )
+    return create_task_block(value, type = 'Hot Topic')
 
 
 ############# Running the app #############
