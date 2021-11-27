@@ -36,12 +36,25 @@ num_tasks = len(tasks_split)
 
 def generate_task_entry(i):
     '''
-    This function generates a line in the website which shows the task to do
+    This function generates a line in the website which shows the task to do.
+
+    Input: index of which task to take [0, 1, 2, 3, ...]
+
+    Logic:
+        1. Create Div Container for the task (all in one line)
+        2. Create first text entry which gets first part of text
+        3. Create Input box where the user will input his solution
+        4. Save middle part of text (= Solution) as a hidden text
+           (This hidden text is needed for the callback later)
+        5. Crate second text entry after the input box which shows
+           last part of text
+        6. Create output which shows either " Correct" or " False"
+           (Text value assigned in callback later)
     '''
     output = html.Div(children=[
         html.P(tasks_split[i][0], style={'display': 'inline-block'}),
         dcc.Input(id={'type':'dynamic-input','index':i}, value='', type="text", className='input'),
-        html.P(id={'type':'dynamic-solution','index':i}, children = tasks_split[i][1], hidden=True),
+        html.P(id={'type':'dynamic-solution','index':i}, children = tasks_split[i][1], hidden=True), # stores the solution (needed for later)
         html.P(tasks_split[i][2], style={'display': 'inline-block'}),
         html.Div(id={'type':'dynamic-output','index':i}, style={'display': 'inline-block', 'color':'red'})
         ])
@@ -75,6 +88,7 @@ app.layout = html.Div(children=[
 # Initialise range of 
 i = range(0,num_tasks)
 
+# Callback of first block
 @app.callback(
     Output({'type': 'dynamic-output', 'index': MATCH}, 'children'),
     Input({'type': 'dynamic-input', 'index': MATCH}, 'value'),
@@ -83,12 +97,12 @@ i = range(0,num_tasks)
 )
 
 def update_taskinput(value,children):
-    print(f'New Input Task: '+ value + '| Solution: ' + children)
+    print(f'New Input Task: '+ value + ' | Solution: ' + children)
     
     if value == str(children):
-        return ' correct'
+        return ' ✓ Korrekt'
     else:
-        return ' false'
+        return ' ✗ Falsch'
 
 
 
