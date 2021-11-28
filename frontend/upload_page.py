@@ -5,7 +5,6 @@ import dash_table as dt
 from dash.dependencies import Input, Output, State, MATCH, ALL
 import pandas as pd
 import dash_bootstrap_components as dbc
-
 import base64
 import io
 import pandas as pd
@@ -45,7 +44,7 @@ app.layout = html.Div(children=[
 
 
 ################## CALLBACKS AND FUNCTIONS #################
-
+upload_type = 'None'
 def parse_contents(contents, filename):
     '''
     This function takes the files uploaded and concatenates them and parses them.
@@ -58,21 +57,30 @@ def parse_contents(contents, filename):
     decoded = base64.b64decode(content_string)
 
     if 'csv' in filename:
-        df = pd.read_csv(
-            io.StringIO(decoded.decode('utf-8')))
+        try:
+            df = pd.read_csv(
+                io.StringIO(decoded.decode("ISO-8859-1")))
+        except:
+            df = pd.read_csv(
+                io.StringIO(decoded.decode("utf-8")))
 
     elif 'xls' in filename:
         df = pd.read_excel(io.BytesIO(decoded))
 
-    print(df.head(5))
+    if 'word_instance' in df.columns:
+        upload_type = 'exercise'
+        json_file = df.to_json()
+        print(json_file)
+        # API CALL HERE
 
-    json_file = df.to_json()
-    print(json_file)
-    # API CALL HERE
+    else:
+        upload_type = 'word info'
+        json_file = df.to_json()
+        print(json_file)
+        # API CALL HERE
 
     return html.Div([
-        html.P('The following file was uploaded:'),
-        html.H5(filename),
+        html.H5(f'The following {upload_type} file was uploaded: {filename}'),
         dt.DataTable(
             data=df.to_dict('records'),
             columns=[{'name': i, 'id': i} for i in df.columns]
