@@ -11,8 +11,21 @@ import dash_bootstrap_components as dbc
 data = {
     'ID': [0,1,2,3,4,5], 
     'Firstname': ['Tatjana','Felix','Räto','Timon','Radu','Debora'], 
-    'Lastname': ['Ferri','Jost','Kessler','Bodmer','Tanase','Costa']}
+    'Lastname': ['Ferri','Jost','Kessler','Bodmer','Tanase','Costa'],
+    'Email':['tatjan.ferri@uzh.ch','felix.jost@uzh.ch','raeto.kessler@uzh.ch','timon.bodmer@uzh.ch','radu.tanase@uzh.ch','debora.costa@uzh.ch'],
+    'Exercise Durations':['10','15','20','10','20','10'],
+    'Goal':['A2','C1','B1','B2','C2','B1']}
 df = pd.DataFrame(data=data)
+
+# -> to be replaced with Backend GetProgressItems()
+data_ht = {
+    'item_id': [0,1,2,3,4,5], 
+    'field': ['vocabulary','vocabulary','vocabulary','vocabulary','vocabulary','vocabulary'], 
+    'area_name': ['General Concepts','General Concepts','General Concepts','General Concepts','General Concepts','General Concepts'],
+    'area_order':[10,10,10,10,10,10],
+    'section_name':['Time','Day and Week','Month and Year','Space','Numbers','Colors'],
+    'section_order':[100,110,120,130,140,150]}
+df_ht = pd.DataFrame(data=data_ht)
 
 ######################## Initialise app  ########################
 
@@ -20,57 +33,71 @@ app = dash.Dash()
 
 ######################## Dash App Layout  ########################
 
-app.layout = html.Div(children=[
+
+app.layout = html.Div(style={'backgroundColor':'#FFFFFF'},
+    children=[
     html.P(id='delete_student_placeholder'), # Create placeholder for functions without callback
     html.P(id='add_student_placeholder'), # Create placeholder for functions without callback
+    html.P(id='assign-placeholder'), # Create placeholder for functions without callback
     dcc.Store(id='student_id_temp'), # Create storage value for get_row_info()
-    
-    html.Div(className='row bg-lightgrey', # Top Row and banner
-        children=[
-            html.H2('Admin Panel',style={'color': 'white', 'text-align':'center', 'padding-top': '10px', 'vertical-align':'center'})
-        ]),
-
-    html.Div(className='row',  # Second row, containing all the important stuff
-        children=[
-            html.Div(className='four columns',
-                children = [
-                    html.H2('Controls',style={'color': 'white'}),
-                    
-                    # Delete Button
-                    html.P('''Select student in the table, then press the DELETE button'''),
-                    html.Button('Delete', id='delete-button', n_clicks=0, className='button'),
-                    html.P('',style={"margin-top": "15px"}),
-                    
-                    # Add Student Button
-                    html.P('''To add a Student to the database, fill out the fields below and click "Add"'''),
-                    dcc.Input(id='firstname', value='Firstname...', type="text", className='input'),
-                    dcc.Input(id='lastname', value='Lastname...', type="text", className='input'),
-                    html.Button('Add', id='add-button', n_clicks=0, className='button'),
-                ],
-                style={'backgroundColor': '#1E1E1E'}),
+    dcc.Store(id='topic_id_temp'), # Create storage value for get_row_info()
             
-            html.Div(className='eight columns bg-grey div-charts', # Define the right element
+    html.Div(className='row', style={'backgroundColor':'#FFD6A0'}, # Top Row and banner
+        children=[
+            html.H2('Personal German',style={'color': '#333331', 'text-align':'right', 'margin-right': '35px','padding-top': '15px', 'font-size': '30px', 'vertical-align':'center'}),
+            html.H4('Learn Fluent German in 1 Year',style={'color': '#333331', 'text-align':'right', 'margin-right': '35px','font-size': '15px', 'vertical-align':'center'}),
+      ]),
+    html.Div(className='row', style={'backgroundColor':'#D52330'}, # Top red banner
+        children=[
+            html.Br(),
+        ]
+      ),
+
+    html.Div(className='row',
+        children=[
+            html.Div(className='two columns div-for-charts', style={'background':'#393C3D'},
+                 children = [
+                    html.H2('Teacher View', style={'color': '#FFD6A0','margin-left':'15px'}),
+                    html.Br(),
+                    html.Br(),
+                    dcc.Link('Admin Page', href='https://plot.ly', style={'color': 'white','font':'arial','margin-left':'35px'}), #replace the link!
+                    html.Br(),
+                    html.A('Exercise', href='https://plot.ly', style={'color': 'white','margin-left':'35px'}), #replace the link!
+                    html.Br(),
+                    html.A("Dashboard", href='https://plot.ly', style={'color': 'white','margin-left':'35px'}), #replace the link!
+                    html.Br(),
+                    html.H2('Student View', style={'color': '#FFD6A0','margin-left':'15px'}),
+                    html.A("Solve Exercises", href='https://plot.ly', style={'color': 'white','margin-left':'35px'}), #replace the link!
+                    html.Br()],
+                    ),
+            
+        
+            html.Div(className='ten columns div-charts', # Define the right element
                 style = { 'display': 'flex', 'flex-direction': 'column', 'height': '100vh','width': '60%'},
                 children = [
-                    html.H2('Enrolled Students',style={'color': 'white'}),
-            
-            # Students Table
-            dbc.Container([
-                dt.DataTable(
+                    
+                    html.Div(children=[
+
+                    
+                    html.H2('Enrolled Students',style={'color': 'black'}),
+                   
+                    # Students Table
+                    dbc.Container([ 
+                    dt.DataTable(
                     id='tbl', data=df.to_dict('records'),
                     columns=[{"name": i, "id": i} for i in df.columns],
-                                    
                     style_header={
-                        'backgroundColor': 'rgb(30, 30, 30)',
-                        'color': 'white'
+                        'backgroundColor': 'white',
+                        'fontWeight': 'bold',
+                        'color': 'black'
                     },
                     style_filter = {
-                        'backgroundColor': 'rgb(45, 45, 45)',
-                        'color': 'white'
+                        'backgroundColor': 'rgb(230, 230, 230)',
+                        'color': 'black'
                     },
                     style_data={
-                        'backgroundColor': 'rgb(50, 50, 50)',
-                        'color': 'white'
+                        'backgroundColor': 'rgb(245, 245, 245)',
+                        'color': 'black'
                     },
                     filter_action="native",
                     sort_action="native",
@@ -82,14 +109,82 @@ app.layout = html.Div(children=[
                     page_action="native",
                     page_current= 0,
                     page_size= 10,
-                ),
+                    ),
+                    ]),
+                
+                html.H2('Tasks',style={'color': 'black'}),
+                # Progress table
+                dbc.Container([
+                    dt.DataTable(
+                    id='tbl-ht', data=df_ht.to_dict('records'),
+                    columns=[{"name": i, "id": i} for i in df_ht.columns],
+                    style_header={
+                        'backgroundColor': 'white',
+                        'fontWeight': 'bold',
+                        'color': 'black'
+                    },
+                    style_filter = {
+                        'backgroundColor': 'rgb(230, 230, 230)',
+                        'color': 'black'
+                    },
+                    style_data={
+                        'backgroundColor': 'rgb(245, 245, 245)',
+                        'color': 'black'
+                    },
+                    filter_action="native",
+                    sort_action="native",
+                    sort_mode="multi",
+                    row_selectable="single",
+                    cell_selectable=False,
+                    selected_columns=[],
+                    selected_rows=[],
+                    page_action="native",
+                    page_current= 0,
+                    page_size= 10,
+                    
+                    ),
+                ]),
+
+                # Delete Button
+                html.Div(
+                    children = [
+                        html.H2('Controls',style={'color': 'black'}),
+                        html.P('''Select student in the table, then press the DELETE button''',style={'color': 'black'}),
+                        html.Button('Delete', id='delete-button', n_clicks=0, className='button'),
+                        html.P('',style={"margin-top": "15px"}),
+                        
+                        # Add Student Button
+                        html.P('''To add a Student to the database, fill out the fields below and click "Add"''', style={'color': 'black'}),
+                        html.Div([
+                            dcc.Input(id='firstname', value='Firstname...', type="text", className='input', style={'width':'15%','display': 'inline-block'}),
+                            dcc.Input(id='lastname', value='Lastname...', type="text", className='input', style={'width':'15%','display': 'inline-block'}),
+                            dcc.Input(id='email', value='Email...', type="text", className='input', style={'width':'35%','display': 'inline-block'}),
+                            dcc.Input(id='exercise_duration', value='Exercise Duration...', type="text", className='input', style={'width':'15%','display': 'inline-block'}),
+                            dcc.Input(id='goal', value='Goal...', type="text", className='input', style={'width':'10%','display': 'inline-block'})
+                            ]),
+                        html.Button('Add', id='add-button', n_clicks=0, className='button'),
+                    
+                    # Assign Student an exercise
+
+                    html.Br(),
+                    html.P('''Select Student, exercise, and click "Assign"''', style={'display': 'inline-block', 'color':'black'}),
+                    
+                    # Assign Button
+                    html.Button('Assign Item', id='assign-button', n_clicks=0, className='button'),
+
+                    
+
+                    ]),
+                    html.Br(),
+                    html.Br(),
+                    html.Br(),
+
+
+
+                ]),
             ]),
-        ])
-
-    ])
+        ]) 
 ])
-
-
 
 
 ################## CALLBACKS AND FUNCTIONS #################
@@ -168,12 +263,18 @@ def delete_button_press(n_clicks, student_id_temp):
     Output(component_id='add_student_placeholder', component_property='children'),
     [Input('add-button', 'n_clicks'),
     Input('firstname', 'value'),
-    Input('lastname', 'value')],
+    Input('lastname', 'value'),
+    Input('email', 'value'),
+    Input('exercise_duration', 'value'),
+    Input('goal', 'value')],
     State=[State('firstname','value'),
-            State('lastname', 'value')]
+            State('lastname', 'value'),
+            State('email','value'),
+            State('exercise_duration','value'),
+            State('goal','value')]
 )
 
-def add_button_press(n_clicks, firstname, lastname):
+def add_button_press(n_clicks, firstname, lastname, email, exercise_duration, goal):
     '''
     This function adds the student to of the dataframe when the delete 
     button is pressed. The Info (firstname, lastname) is written into
@@ -192,14 +293,66 @@ def add_button_press(n_clicks, firstname, lastname):
     if 'add-button' in changed_id and n_clicks>0:
 
         # 3. Write a new row into the dataframe with the student
-        print(f" Adding {firstname},{lastname}.")
+        print(f" Adding {firstname},{lastname},{email},{exercise_duration},{goal}.")
         
         id = df.ID.max() + n_clicks
         new_row = df.shape[0]
 
-        df.loc[new_row] = [id,firstname,lastname]
+        df.loc[new_row] = [id,firstname,lastname,email,exercise_duration,goal]
 
     return None
+
+### functionality for ht datatable
+@app.callback(
+    Output('topic_id_temp', 'data'), 
+    Input('tbl-ht', 'selected_rows'),
+    Input('tbl-ht','data'),
+    )
+
+
+def get_row_info_ht(selected_rows, data):
+    '''
+    Function which retrieves the info of the selected row for the Hot topic table.
+    
+    '''
+    print(selected_rows)
+
+    row = df_ht.loc[selected_rows]
+    
+    try:
+        item_id = df_ht.loc[selected_rows,'item_id'].values[0]
+    except:
+        item_id = None
+
+    print("Section selected:" + str(row))
+    print("item_id selected:" + str(item_id))
+
+    return item_id
+
+# assign button
+@app.callback(
+    Output('assign-placeholder', 'children'),
+    Input('assign-button', 'n_clicks'),
+    Input('student_id_temp', 'data'),
+    Input('topic_id_temp', 'data')
+)
+
+def assign_button_press(n_clicks, student_id_temp, topic_id_temp):
+    
+    # 1. Check if assign button has been clicked
+    changed_id = [p['prop_id'] for p in dash.callback_context.triggered][0]
+    if 'assign-button' in changed_id and n_clicks>0:
+        print('click registered')
+        # 2. Drop student with the respective ID
+        print(f"assigning  exercise {topic_id_temp} to student {student_id_temp}")
+        # API CALL here
+    
+    else:
+        print("assign button press has passed")
+        pass
+
+    return None
+
 
 
 ############# Running the app #############
