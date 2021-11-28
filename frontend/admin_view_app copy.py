@@ -23,39 +23,50 @@ app = dash.Dash()
 
 ######################## Dash App Layout  ########################
 
+
 app.layout = html.Div(children=[
     html.P(id='delete_student_placeholder'), # Create placeholder for functions without callback
     html.P(id='add_student_placeholder'), # Create placeholder for functions without callback
     dcc.Store(id='student_id_temp'), # Create storage value for get_row_info()
-    
-    html.Div(className='row bg-lightgrey', # Top Row and banner
+            
+    html.Div(className='row', style={'backgroundColor':'#FFD6A0'}, # Top Row and banner
         children=[
-            html.H2('Personal German',style={'color': 'white', 'text-align':'center', 'padding-top': '10px', 'vertical-align':'center'})
-        ]),
+            html.H2('Personal German',style={'color': '#333331', 'text-align':'right', 'margin-right': '35px','padding-top': '15px', 'font-size': '30px', 'vertical-align':'center'}),
+            html.H4('Learn Fluent German in 1 Year',style={'color': '#333331', 'text-align':'right', 'margin-right': '35px','font-size': '15px', 'vertical-align':'center'}),
+      ]),
+    html.Div(className='row', style={'backgroundColor':'#D52330'}, # Top red banner
+        children=[
+            html.Br(),
+        ]
+      ),
 
     html.Div(className='row',  # Second row, containing all the important stuff
         children=[
-            html.Div(className='three columns',
+            html.Div(className='two columns', style={'background':'#393C3D'},
                  children = [
-                    html.H2('Teacher View',style={'color': 'white'}),
+                    html.H2('Teacher View', style={'color': '#FFD6A0','margin-left':'15px'}),
                     html.Br(),
                     html.Br(),
-                    html.A("Admin Page", href='https://plot.ly', style={'color': 'white'}), #replace the link!
+                    dcc.Link('Admin Page', href='https://plot.ly', style={'color': 'white','font':'arial','margin-left':'35px'}), #replace the link!
                     #html.link('''''',style={'color': 'white'}),
                     html.Br(),
-                    html.A("Exercise", href='https://plot.ly', style={'color': 'white'}), #replace the link!
+                    html.A('Exercise', href='https://plot.ly', style={'color': 'white','margin-left':'35px'}), #replace the link!
                     html.Br(),
-                    html.A("Dashboard", href='https://plot.ly', style={'color': 'white'}), #replace the link!
-                  ],
-                style={'backgroundColor': '#1E1E1E'}),
+                    html.A("Dashboard", href='https://plot.ly', style={'color': 'white','margin-left':'35px'}), #replace the link!
+                    html.Br(),
+                    html.H2('Student View', style={'color': '#FFD6A0','margin-left':'15px'}),
+                    html.A("Solve Exercises", href='https://plot.ly', style={'color': 'white','margin-left':'35px'}), #replace the link!
+                    html.Br()],
+                    ),
             
-            html.Div(className='nine columns bg-grey div-charts', # Define the right element
+        
+            html.Div(className='ten columns div-charts', # Define the right element
                 style = { 'display': 'flex', 'flex-direction': 'column', 'height': '100vh','width': '60%'},
                 children = [
                     html.H2('Enrolled Students',style={'color': 'white'}),
                    
                     # Students Table
-                    dbc.Container([
+                    dbc.Container([ 
                     dt.DataTable(
                     id='tbl', data=df.to_dict('records'),
                     columns=[{"name": i, "id": i} for i in df.columns],
@@ -82,32 +93,33 @@ app.layout = html.Div(children=[
                     page_action="native",
                     page_current= 0,
                     page_size= 10,
-                ),
-            ]),
-              
+                    ),
+                    ]),
+                
 
 
              # Delete Button.
-
+            html.Div(
+                children = [
                     html.H2('Controls',style={'color': 'white'}),
                     html.P('''Select student in the table, then press the DELETE button'''),
                     html.Button('Delete', id='delete-button', n_clicks=0, className='button'),
                     html.P('',style={"margin-top": "15px"}),
                     
                     # Add Student Button
-                    html.P('''To add a Student to the database, fill out the fields below and click "Add"''', style={'display': 'inline-block'}),
-                    dcc.Input(id='firstname', value='Firstname...', type="text", className='input'),
-                    dcc.Input(id='lastname', value='Lastname...', type="text", className='input'),
-                    dcc.Input(id='email', value='Email...', type="text", className='input'),
-                    dcc.Input(id='exercise_duration', value='Exercise Duration...', type="text", className='input'),
-                    dcc.Input(id='goal', value='Goal...', type="text", className='input'),
+                    html.P('''To add a Student to the database, fill out the fields below and click "Add"''', style={}),
+                    html.Div([
+                        dcc.Input(id='firstname', value='Firstname...', type="text", className='input', style={'width':'15%','display': 'inline-block'}),
+                        dcc.Input(id='lastname', value='Lastname...', type="text", className='input', style={'width':'15%','display': 'inline-block'}),
+                        dcc.Input(id='email', value='Email...', type="text", className='input', style={'width':'35%','display': 'inline-block'}),
+                        dcc.Input(id='exercise_duration', value='Exercise Duration...', type="text", className='input', style={'width':'15%','display': 'inline-block'}),
+                        dcc.Input(id='goal', value='Goal...', type="text", className='input', style={'width':'10%','display': 'inline-block'})
+                        ]),
                     html.Button('Add', id='add-button', n_clicks=0, className='button')
-                    ])
-
-    ])
+                ]),
+            ]),
+        ]) 
 ])
-
-
 
 
 ################## CALLBACKS AND FUNCTIONS #################
