@@ -17,6 +17,7 @@ data = {
     'Goal':['A2','C1','B1','B2','C2','B1']}
 df = pd.DataFrame(data=data)
 
+
 # -> to be replaced with Backend GetProgressItems()
 data_ht = {
     'item_id': [0,1,2,3,4,5], 
