@@ -18,7 +18,7 @@ layout = html.Div(style={'backgroundColor':'#FFFFFF'}, children=[
     html.Div(className='row', style={'backgroundColor':'#FFD6A0','top': '0', 'width':'100%'}, # Top Row and banner
         children=[
             html.H2('Personal German',style={'color': '#333331', 'text-align':'left', 'margin-top':'0px','padding-top':'12px','margin-right': '35px', 'font-size': '30px', 'vertical-align':'center','padding-left':'25px'}),
-            html.H4('Learn fluent german in 1 year',style={'color': '#333331', 'text-align':'left', 'margin-right': '35px','font-size': '15px', 'vertical-align':'center','padding-left':'25px'}),
+            html.H4('Speak fluent german in 1 year',style={'color': '#333331', 'text-align':'left', 'margin-right': '35px','font-size': '15px', 'vertical-align':'center','padding-left':'25px'}),
       ]),
     html.Div(className='row', style={'backgroundColor':'#D52330', 'height':'5px'}, # Top red banner
         children=[

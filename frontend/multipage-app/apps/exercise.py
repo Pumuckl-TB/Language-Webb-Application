@@ -55,12 +55,6 @@ def create_task_block(name = None, surname = None, type = 'ML'):
 
     Many of the values are updated via callbacks at the bottom
     '''
-    # output = []
-    # if name == None:
-    #     return html.H1('Please select student')
-    # else:
-    #     tasks_split = None
-
     json_file = {'name': name,'surname': surname}
     
     if type == 'ML':
@@ -156,7 +150,7 @@ layout = html.Div(style={'backgroundColor':'#FFFFFF'}, children=[
     html.Div(className='row', style={'backgroundColor':'#FFD6A0','top': '0', 'width':'100%'}, # Top Row and banner
         children=[
             html.H2('Personal German',style={'color': '#333331', 'text-align':'left', 'margin-top':'0px','padding-top':'12px','margin-right': '35px', 'font-size': '30px', 'vertical-align':'center','padding-left':'25px'}),
-            html.H4('Learn fluent german in 1 year',style={'color': '#333331', 'text-align':'left', 'margin-right': '35px','font-size': '15px', 'vertical-align':'center','padding-left':'25px'}),
+            html.H4('Speak fluent german in 1 year',style={'color': '#333331', 'text-align':'left', 'margin-right': '35px','font-size': '15px', 'vertical-align':'center','padding-left':'25px'}),
       ]),
     html.Div(className='row', style={'backgroundColor':'#D52330', 'height':'5px'}, # Top red banner
         children=[
@@ -187,7 +181,7 @@ layout = html.Div(style={'backgroundColor':'#FFFFFF'}, children=[
             value='Select Student',
             clearable=False,
             ),
-        style = {'width':'25%', 'font-family':'arial'}), 
+        style = {'width':'25%', 'font-family':'arial', 'margin-left':'10px'}), 
         html.Div(id='output_temp'),
         html.H3('Machine Learning Exercise'),
         # ML block type
