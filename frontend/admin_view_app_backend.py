@@ -6,7 +6,6 @@ from dash.dependencies import Input, Output, State
 import pandas as pd
 import dash_bootstrap_components as dbc
 import requests
-import json
 
 
 ##################### Initialise Variables  #####################
@@ -168,8 +167,6 @@ app.layout = html.Div(style={'backgroundColor':'#FFFFFF'},
                     # Assign Button
                     html.Button('Assign Item', id='assign-button', n_clicks=0, className='button'),
 
-                    
-
                     ]),
                     html.Br(),
                     html.Br(),
@@ -286,11 +283,9 @@ def add_button_press(n_clicks, firstname, lastname, email, exercise_duration, ob
         3. Pass json to backend with /addstudent call.
     '''
    
-    # 1. Check if delete button has been clicked 
     changed_id = [p['prop_id'] for p in dash.callback_context.triggered][0]
     if 'add-button' in changed_id and n_clicks>0:
 
-        
         print(f" Adding {firstname},{lastname},{email},{exercise_duration},{objective}.")
 
         student = {
@@ -359,7 +354,6 @@ def assign_button_press(n_clicks, student_firstname_lastname, topic_id_temp):
         pass
 
     return None
-
 
 
 ############# Running the app #############
