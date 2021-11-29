@@ -82,14 +82,21 @@ def create_task_block(id, type = 'ML'):
         return html.H1('Please select student')
     if id == 0:
         tasks_split = split_exercise(exercise2)
+        print(tasks_split)
 
     if id != 0:
         tasks_split = split_exercise(exercise1)
+        print(tasks_split)
 
     if type == 'ML':
 
         output = []
         for i in range(0,len(tasks_split)):
+            if len(tasks_split[i])==1: # task has no blank
+                task_line = html.Div(
+                    children=[
+                        html.P(tasks_split[i][0], style={'display': 'inline-block'}),
+                    ])            
             if len(tasks_split[i])<=3: # task has a maximum of 1 blank
                 task_line = html.Div(
                     children=[
@@ -151,30 +158,63 @@ app = dash.Dash()
 
 ######################## Dash App Layout  ########################
 
-app.layout = html.Div(children=[
+app.layout = html.Div(style={'backgroundColor':'#FFFFFF'}, children=[
+    html.Div(className='row', style={'backgroundColor':'#FFD6A0'}, # Top Row and banner
+        children=[
+            html.H2('Personal German',style={'color': '#333331', 'text-align':'right', 'margin-right': '35px','padding-top': '15px', 'font-size': '30px', 'vertical-align':'center'}),
+            html.H4('Learn Fluent German in 1 Year',style={'color': '#333331', 'text-align':'right', 'margin-right': '35px','font-size': '15px', 'vertical-align':'center'}),
+      ]),
+    html.Div(className='row', style={'backgroundColor':'#D52330'}, # Top red banner
+        children=[
+            html.Br(),
+        ]
+      ),
+    html.Div(
+    children=[
+        html.Div(className='two columns div-for-charts', style={'background':'#393C3D'},
+                children = [
+                html.H2('Teacher View', style={'color': '#FFD6A0','margin-left':'15px'}),
+                html.Br(),
+                html.Br(),
+                dcc.Link('Admin Page', href='https://plot.ly', style={'color': 'white','font':'arial','margin-left':'35px'}), #replace the link!
+                html.Br(),
+                html.A('Exercise', href='https://plot.ly', style={'color': 'white','margin-left':'35px'}), #replace the link!
+                html.Br(),
+                html.A("Dashboard", href='https://plot.ly', style={'color': 'white','margin-left':'35px'}), #replace the link!
+                html.Br(),
+                html.H2('Student View', style={'color': '#FFD6A0','margin-left':'15px'}),
+                html.A("Solve Exercises", href='https://plot.ly', style={'color': 'white','margin-left':'35px'}), #replace the link!
+                html.Br()],
+                ),
+    ]),
 
-    html.H1('Student Exercise View'),
-    html.Br(),
-    html.Div(dcc.Dropdown(
-        id='student-selector',
-        options = [{'label': label, 'value': value} for label, value in zip(students.get('Firstname'),students.get('ID'))],
-        value='Select Student',
-        className='dropdown'    
-    ),style={"width": "20%"}),
-    html.Div(id='output_temp'),
-    html.H3('Machine Learning Exercise'),
-    # ML block type
-    html.Div(children = create_task_block(id, type = 'ML'), id = 'block-container-ml'),      
-    
-    html.Br(),
-    
-    html.H3('Hot Topic Exercise'),
-    # Hot Topic block type
-    html.Div(children = create_task_block(id, type = 'Hot Topic'), id = 'block-container-hottopic'),
-    html.Br(),
-    html.Button('Click when finished', id='finish-button', n_clicks=0, className='button'),
-    html.Div(id='time-elapsed-container'),
-    html.Div(id='start-time',hidden=True)     
+    html.Div(className='ten columns div-charts', # Define the right element
+                style = { 'display': 'flex', 'flex-direction': 'column', 'height': '100vh','width': '60%'},
+                children = [
+        html.Br(),
+        html.H1('Student Exercise View'),
+        html.Br(),
+        html.Div(dcc.Dropdown(
+            id='student-selector',
+            options = [{'label': label, 'value': value} for label, value in zip(students.get('Firstname'),students.get('ID'))],
+            value='Select Student',
+            className='dropdown'    
+        ),style={"width": "20%"}),
+        html.Div(id='output_temp'),
+        html.H3('Machine Learning Exercise'),
+        # ML block type
+        html.Div(children = create_task_block(id, type = 'ML'), id = 'block-container-ml'),      
+        
+        html.Br(),
+        
+        html.H3('Hot Topic Exercise'),
+        # Hot Topic block type
+        html.Div(children = create_task_block(id, type = 'Hot Topic'), id = 'block-container-hottopic'),
+        html.Br(),
+        html.Button('Click when finished', id='finish-button', n_clicks=0, className='button'),
+        html.Div(id='time-elapsed-container'),
+        html.Div(id='start-time',hidden=True)     
+                ])
 ])
 
 ################## CALLBACKS AND FUNCTIONS #################
