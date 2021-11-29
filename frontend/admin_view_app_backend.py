@@ -8,19 +8,11 @@ import dash_bootstrap_components as dbc
 import requests
 
 
-##################### Initialise Variables  #####################
+##################### Get Dataframes  ###########################
+
 url_backend = 'http://localhost:5000'
 df = pd.read_json(f'{url_backend}/students')
-
-# -> to be replaced with Backend GetProgressItems()
-data_ht = {
-    'item_id': [0,1,2,3,4,5], 
-    'field': ['vocabulary','vocabulary','vocabulary','vocabulary','vocabulary','vocabulary'], 
-    'area_name': ['General Concepts','General Concepts','General Concepts','General Concepts','General Concepts','General Concepts'],
-    'area_order':[10,10,10,10,10,10],
-    'section_name':['Time','Day and Week','Month and Year','Space','Numbers','Colors'],
-    'section_order':[100,110,120,130,140,150]}
-df_ht = pd.DataFrame(data=data_ht)
+df_ht = pd.read_json(f'{url_backend}/progress')
 
 ######################## Initialise app  ########################
 
