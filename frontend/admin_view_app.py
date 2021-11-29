@@ -37,23 +37,22 @@ app = dash.Dash()
 
 app.layout = html.Div(style={'backgroundColor':'#FFFFFF'},
     children=[
-    html.P(id='delete_student_placeholder'), # Create placeholder for functions without callback
-    html.P(id='add_student_placeholder'), # Create placeholder for functions without callback
-    html.P(id='assign-placeholder'), # Create placeholder for functions without callback
+    html.P(id='delete_student_placeholder', hidden=True), # Create placeholder for functions without callback
+    html.P(id='add_student_placeholder',hidden=True), # Create placeholder for functions without callback
+    html.P(id='assign-placeholder',hidden=True), # Create placeholder for functions without callback
     dcc.Store(id='student_id_temp'), # Create storage value for get_row_info()
     dcc.Store(id='topic_id_temp'), # Create storage value for get_row_info()
             
-    html.Div(className='row', style={'backgroundColor':'#FFD6A0'}, # Top Row and banner
+    html.Div(className='row', style={'backgroundColor':'#FFD6A0','top': '0', 'width':'100%'}, # Top Row and banner
         children=[
-            html.H2('Personal German',style={'color': '#333331', 'text-align':'right', 'margin-right': '35px','padding-top': '15px', 'font-size': '30px', 'vertical-align':'center'}),
-            html.H4('Learn Fluent German in 1 Year',style={'color': '#333331', 'text-align':'right', 'margin-right': '35px','font-size': '15px', 'vertical-align':'center'}),
+            html.H2('Personal German',style={'color': '#333331', 'text-align':'left', 'margin-top':'0px','padding-top':'12px','margin-right': '35px', 'font-size': '30px', 'vertical-align':'center','padding-left':'25px'}),
+            html.H4('Learn Fluent German in 1 Year',style={'color': '#333331', 'text-align':'left', 'margin-right': '35px','font-size': '15px', 'vertical-align':'center','padding-left':'25px'}),
       ]),
-    html.Div(className='row', style={'backgroundColor':'#D52330'}, # Top red banner
+    html.Div(className='row', style={'backgroundColor':'#D52330', 'height':'5px'}, # Top red banner
         children=[
             html.Br(),
         ]
       ),
-
     html.Div(className='row',
         children=[
             html.Div(className='two columns div-for-charts', style={'background':'#393C3D'},
