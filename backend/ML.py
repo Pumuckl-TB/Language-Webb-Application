@@ -61,8 +61,12 @@ def ml():
     ml_df_user.sort_values(by='duration', ascending = False)
     ml_block_id = ml_df_user['block_id'].iloc[0]
 
+    # If no block id is found => new user, then assign block_id 1
+    if np.isnan(ml_block_id) == True:
+        ml_block_id = 1
+
     # Assign exc with this specific block_id to the user
-    ml_output = ml_df_user[(ml_df_user['block_id'] == ml_block_id)]
+    ml_output = ml_df[(ml_df['block_id'] == ml_block_id)]
 
     # Return as json
     ml_output = ml_output.to_json()
