@@ -45,11 +45,11 @@ app.layout = html.Div(style={'backgroundColor':'#FFFFFF'},
         html.Div(children=[
             html.Div(className='two columns div-for-charts', style={'background':'#393C3D'},
                     children = [
-                    html.H2('Teacher View', style={'color': '#FFD6A0','margin-left':'15px'}),
-                    dcc.Link('Admin Page', href='https://plot.ly', style={'color': 'white','font':'arial','margin-left':'30px'}), #replace the link!
+                    html.H2('Teacher View', style={'color': '#FFD6A0','margin-left':'15px', 'margin-bottom':'7px'}),
+                    dcc.Link('Admin Page', href='https://plot.ly', style={'color': 'white','margin-left':'30px'}), #replace the link!
                     html.A('Upload Data', href='https://plot.ly', style={'color': 'white','margin-left':'30px', 'margin-top':'5px'}), #replace the link!
                     html.A("Performance Dashboard", href='https://plot.ly', style={'color': 'white','margin-left':'30px', 'margin-top':'5px'}), #replace the link!
-                    html.H2('Student View', style={'color': '#FFD6A0','margin-left':'15px', 'margin-top':'15px'}),
+                    html.H2('Student View', style={'color': '#FFD6A0','margin-left':'15px', 'margin-top':'15px', 'margin-bottom':'7px'}),
                     html.A("Solve Exercises", href='https://plot.ly', style={'color': 'white','margin-left':'30px'})], #replace the link!
                     ),
             ]),
