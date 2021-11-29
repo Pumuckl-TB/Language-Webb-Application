@@ -16,30 +16,61 @@ app = dash.Dash()
 
 ######################## Dash App Layout  ########################
 
-app.layout = html.Div(children=[
-    html.H1('Welcome to the upload page'),
-    html.P(id='dataframe-storage', hidden=True), # Create dataframe storage placeholder
-    html.Br(),
-    dcc.Upload(
-        id='upload-data',
-        children=html.Div([
-            'Drag and Drop or ',
-            html.A('Select Files')
+app.layout = html.Div(style={'backgroundColor':'#FFFFFF'}, children=[
+    html.Div(className='row', style={'backgroundColor':'#FFD6A0'}, # Top Row and banner
+        children=[
+            html.H2('Personal German',style={'color': '#333331', 'text-align':'right', 'margin-right': '35px','padding-top': '15px', 'font-size': '30px', 'vertical-align':'center'}),
+            html.H4('Learn Fluent German in 1 Year',style={'color': '#333331', 'text-align':'right', 'margin-right': '35px','font-size': '15px', 'vertical-align':'center'}),
+      ]),
+    html.Div(className='row', style={'backgroundColor':'#D52330'}, # Top red banner
+        children=[
+            html.Br(),
+        ]
+      ),
+    html.Div(
+        children=[
+            html.Div(className='two columns div-for-charts', style={'background':'#393C3D'},
+                children = [
+                html.H2('Teacher View', style={'color': '#FFD6A0','margin-left':'15px'}),
+                html.Br(),
+                dcc.Link('Admin Page', href='https://plot.ly', style={'color': 'white','font':'arial','margin-left':'35px'}), #replace the link!
+                html.Br(),
+                html.A('Exercise', href='https://plot.ly', style={'color': 'white','margin-left':'35px'}), #replace the link!
+                html.Br(),
+                html.A("Dashboard", href='https://plot.ly', style={'color': 'white','margin-left':'35px'}), #replace the link!
+                html.Br(),
+                html.H2('Student View', style={'color': '#FFD6A0','margin-left':'15px'}),
+                html.A("Solve Exercises", href='https://plot.ly', style={'color': 'white','margin-left':'35px'}), #replace the link!
+                html.Br()],
+                ),
         ]),
-        style={
-            'width': '100%',
-            'height': '60px',
-            'lineHeight': '60px',
-            'borderWidth': '1px',
-            'borderStyle': 'dashed',
-            'borderRadius': '5px',
-            'textAlign': 'center',
-            'margin': '10px'
-        },
-        # Allow multiple files to be uploaded
-        multiple=True
-    ),
-    html.Div(id='output-data-upload'),
+    html.Div(className='ten columns div-charts', # Define the right element
+        style = { 'display': 'flex', 'flex-direction': 'column', 'height': '100vh','width': '60%'},
+        children = [
+            html.H1('Welcome to the upload page'),
+            html.P(id='dataframe-storage', hidden=True), # Create dataframe storage placeholder
+            html.Br(),
+            dcc.Upload(
+                id='upload-data',
+                children=html.Div([
+                    'Drag and Drop or ',
+                    html.A('Select Files')
+                ]),
+                style={
+                    'width': '100%',
+                    'height': '60px',
+                    'lineHeight': '60px',
+                    'borderWidth': '1px',
+                    'borderStyle': 'dashed',
+                    'borderRadius': '5px',
+                    'textAlign': 'center',
+                    'margin': '10px'
+                },
+                # Allow multiple files to be uploaded
+                multiple=True
+            ),
+            html.Div(id='output-data-upload'),
+    ])
 ])
 
 

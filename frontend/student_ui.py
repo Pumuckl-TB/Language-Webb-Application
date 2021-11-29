@@ -170,8 +170,8 @@ app.layout = html.Div(style={'backgroundColor':'#FFFFFF'}, children=[
         ]
       ),
     html.Div(
-    children=[
-        html.Div(className='two columns div-for-charts', style={'background':'#393C3D'},
+        children=[
+            html.Div(className='two columns div-for-charts', style={'background':'#393C3D'},
                 children = [
                 html.H2('Teacher View', style={'color': '#FFD6A0','margin-left':'15px'}),
                 html.Br(),
