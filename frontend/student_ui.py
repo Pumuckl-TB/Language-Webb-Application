@@ -175,7 +175,6 @@ app.layout = html.Div(style={'backgroundColor':'#FFFFFF'}, children=[
                 children = [
                 html.H2('Teacher View', style={'color': '#FFD6A0','margin-left':'15px'}),
                 html.Br(),
-                html.Br(),
                 dcc.Link('Admin Page', href='https://plot.ly', style={'color': 'white','font':'arial','margin-left':'35px'}), #replace the link!
                 html.Br(),
                 html.A('Exercise', href='https://plot.ly', style={'color': 'white','margin-left':'35px'}), #replace the link!
