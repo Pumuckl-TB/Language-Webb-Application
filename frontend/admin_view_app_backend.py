@@ -6,19 +6,12 @@ from dash.dependencies import Input, Output, State
 import pandas as pd
 import dash_bootstrap_components as dbc
 import requests
+import json
 
-##################### Initialise Dataframe  #####################
-# -> to be replaced with Backend: GetAllStudentData()
-# data = {
-#     'ID': [0,1,2,3,4,5], 
-#     'Firstname': ['Tatjana','Felix','Räto','Timon','Radu','Debora'], 
-#     'Lastname': ['Ferri','Jost','Kessler','Bodmer','Tanase','Costa'],
-#     'Email':['tatjan.ferri@uzh.ch','felix.jost@uzh.ch','raeto.kessler@uzh.ch','timon.bodmer@uzh.ch','radu.tanase@uzh.ch','debora.costa@uzh.ch'],
-#     'Exercise Durations':['10','15','20','10','20','10'],
-#     'Goal':['A2','C1','B1','B2','C2','B1']}
-# df = pd.DataFrame(data=data)
-get_students_url ='http://localhost:5000/students'
-df = pd.read_json(get_students_url)
+
+##################### Initialise Variables  #####################
+url_backend = 'http://localhost:5000'
+df = pd.read_json(f'{url_backend}/students')
 
 # -> to be replaced with Backend GetProgressItems()
 data_ht = {
@@ -39,10 +32,10 @@ app = dash.Dash()
 
 app.layout = html.Div(style={'backgroundColor':'#FFFFFF'},
     children=[
-    html.P(id='delete_student_placeholder'), # Create placeholder for functions without callback
-    html.P(id='add_student_placeholder'), # Create placeholder for functions without callback
-    html.P(id='assign-placeholder'), # Create placeholder for functions without callback
-    dcc.Store(id='student_id_temp'), # Create storage value for get_row_info()
+    html.P(id='delete_student_placeholder', hidden=True), # Create placeholder for functions without callback
+    html.P(id='add_student_placeholder', hidden=True), # Create placeholder for functions without callback
+    html.P(id='assign-placeholder', hidden=True), # Create placeholder for functions without callback
+    dcc.Store(id='student_firstname_lastname'), # Create storage value for get_row_info()
     dcc.Store(id='topic_id_temp'), # Create storage value for get_row_info()
             
     html.Div(className='row', style={'backgroundColor':'#FFD6A0'}, # Top Row and banner
@@ -159,11 +152,11 @@ app.layout = html.Div(style={'backgroundColor':'#FFFFFF'},
                         # Add Student Button
                         html.P('''To add a Student to the database, fill out the fields below and click "Add"''', style={'color': 'black'}),
                         html.Div([
-                            dcc.Input(id='firstname', value='Firstname...', type="text", className='input', style={'width':'15%','display': 'inline-block'}),
-                            dcc.Input(id='lastname', value='Lastname...', type="text", className='input', style={'width':'15%','display': 'inline-block'}),
-                            dcc.Input(id='email', value='Email...', type="text", className='input', style={'width':'35%','display': 'inline-block'}),
-                            dcc.Input(id='exercise_duration', value='Exercise Duration...', type="text", className='input', style={'width':'15%','display': 'inline-block'}),
-                            dcc.Input(id='goal', value='Goal...', type="text", className='input', style={'width':'10%','display': 'inline-block'})
+                            dcc.Input(id='firstname', placeholder='Firstname...', type="text", className='input', style={'width':'15%','display': 'inline-block'}),
+                            dcc.Input(id='lastname', placeholder='Lastname...', type="text", className='input', style={'width':'15%','display': 'inline-block'}),
+                            dcc.Input(id='email', placeholder='Email...', type="text", className='input', style={'width':'35%','display': 'inline-block'}),
+                            dcc.Input(id='exercise_duration', placeholder="Duration", type="number", className='input', style={'width':'15%','display': 'inline-block'}),
+                            dcc.Input(id='objective', placeholder='Objective...', type="text", className='input', style={'width':'10%','display': 'inline-block'})
                             ]),
                         html.Button('Add', id='add-button', n_clicks=0, className='button'),
                     
@@ -198,16 +191,18 @@ app.layout = html.Div(style={'backgroundColor':'#FFFFFF'},
     Input('add_student_placeholder', 'children')
     )
 
-def update_table(delete_student_placeholder,add_student_placeholder):
+def update_table(children1, children2):
     '''
-   This function retrieves the new Dataframe when either the delete or 
-   add button are clicked.
+    This function retrieves the new Dataframe when there is an update.
     '''
+
+    print('updating table')
+    df = pd.read_json(f'{url_backend}/students')
     return df.to_dict('records')
 
 
 @app.callback(
-    Output('student_id_temp', 'data'), # student_id_temp is used to save studentID in dcc.Store
+    Output('student_firstname_lastname', 'data'), # student_firstname_lastname is used to save studentID in dcc.Store
     Input('tbl', 'selected_rows'),
     Input('tbl','data'),
     )
@@ -220,39 +215,41 @@ def get_row_info(selected_rows, data):
 
     name = df.loc[selected_rows,'name'].values
     surname = df.loc[selected_rows,'surname'].values
-    json = {'name': name[0], 'surname': surname[0]}
+    try:
+        json_text = {'name': name[0], 'surname': surname[0]}
+    except:
+        json_text = None
+    print(f'selected student: {json_text}')
 
-    print(f'selected student: {json}')
-
-    return json
+    return json_text
 
 #### Delete button
 @app.callback(
     Output('delete_student_placeholder', 'children'),
     Input('delete-button', 'n_clicks'),
-    Input('student_id_temp', 'data')
+    Input('student_firstname_lastname', 'data')
 )
-def delete_button_press(n_clicks, student_id_temp):
+def delete_button_press(n_clicks, student_firstname_lastname):
     '''
     This function deletes the student out of the dataframe when the delete 
     button is pressed.
     Process:
         1. Check if delete_button has been clicked 
             (-> has n_clicks changed and is it > 0) 
-        2. Drop student with the respective ID.
-            (-> to be replaced with DeleteStudent() later)
+        2. Delete student with API call
+        3. return student_firstname_lastname to 
+            delete_student_placeholder, to initiate table update
     '''
     
-    # 1. Check if delete button has been clicked
     changed_id = [p['prop_id'] for p in dash.callback_context.triggered][0]
     if 'delete-button' in changed_id and n_clicks>0:
 
-        # 2. Drop student with the respective ID
-        print(f"deleting: student {student_id_temp}")
+        print(f"deleting: student {student_firstname_lastname}")
         
-        response = requests.post('http://localhost:5000/deletestudent', json=student_id_temp)
+        response = requests.post(f'{url_backend}/deletestudent', json=student_firstname_lastname)
         print(response.text)
-
+        
+        return str(student_firstname_lastname)
     
     else:
         print("delet_button_press has passed")
@@ -262,21 +259,21 @@ def delete_button_press(n_clicks, student_id_temp):
 
 #### Add student button
 @app.callback(
-    Output(component_id='add_student_placeholder', component_property='children'),
+    Output('add_student_placeholder', 'children'),
     [Input('add-button', 'n_clicks'),
     Input('firstname', 'value'),
     Input('lastname', 'value'),
     Input('email', 'value'),
     Input('exercise_duration', 'value'),
-    Input('goal', 'value')],
+    Input('objective', 'value')],
     State=[State('firstname','value'),
             State('lastname', 'value'),
             State('email','value'),
             State('exercise_duration','value'),
-            State('goal','value')]
+            State('objective','value')]
 )
 
-def add_button_press(n_clicks, firstname, lastname, email, exercise_duration, goal):
+def add_button_press(n_clicks, firstname, lastname, email, exercise_duration, objective):
     '''
     This function adds the student to of the dataframe when the delete 
     button is pressed. The Info (firstname, lastname) is written into
@@ -284,27 +281,36 @@ def add_button_press(n_clicks, firstname, lastname, email, exercise_duration, go
     Process:
         1. Check if add-button has been clicked 
             (-> has n_clicks changed and is it > 0)  
-        3. Write a new row into the dataframe with the student
-            (the student firstname and lastname are given as inputs 
-            from the State of the textboxes)
-            (-> in future call AddStudent() function)
+        2. Create a json in the right format that it can be read by 
+            the backend.
+        3. Pass json to backend with /addstudent call.
     '''
    
     # 1. Check if delete button has been clicked 
     changed_id = [p['prop_id'] for p in dash.callback_context.triggered][0]
     if 'add-button' in changed_id and n_clicks>0:
 
-        # 3. Write a new row into the dataframe with the student
-        print(f" Adding {firstname},{lastname},{email},{exercise_duration},{goal}.")
         
-        id = df.ID.max() + n_clicks
-        new_row = df.shape[0]
+        print(f" Adding {firstname},{lastname},{email},{exercise_duration},{objective}.")
 
-        df.loc[new_row] = [id,firstname,lastname,email,exercise_duration,goal]
+        student = {
+            'name': [firstname],
+            'surname': [lastname],
+            'email': [email],
+            'exercise_duration': [exercise_duration],
+            'objective':[objective]}
+        
+        student_json = pd.DataFrame.from_dict(student).to_json()
 
-    return None
+        response = requests.post(f'{url_backend}/addstudent', json=student_json)
+        print(response.text)
 
-### functionality for ht datatable
+        return str(student)
+    else:
+        return None
+
+
+### functionality for hot topic datatable
 @app.callback(
     Output('topic_id_temp', 'data'), 
     Input('tbl-ht', 'selected_rows'),
@@ -335,18 +341,17 @@ def get_row_info_ht(selected_rows, data):
 @app.callback(
     Output('assign-placeholder', 'children'),
     Input('assign-button', 'n_clicks'),
-    Input('student_id_temp', 'data'),
+    Input('student_firstname_lastname', 'data'),
     Input('topic_id_temp', 'data')
 )
 
-def assign_button_press(n_clicks, student_id_temp, topic_id_temp):
+def assign_button_press(n_clicks, student_firstname_lastname, topic_id_temp):
     
-    # 1. Check if assign button has been clicked
     changed_id = [p['prop_id'] for p in dash.callback_context.triggered][0]
     if 'assign-button' in changed_id and n_clicks>0:
         print('click registered')
         # 2. Drop student with the respective ID
-        print(f"assigning  exercise {topic_id_temp} to student {student_id_temp}")
+        print(f"assigning  exercise {topic_id_temp} to student {student_firstname_lastname}")
         # API CALL here
     
     else:
