@@ -21,8 +21,8 @@ sutdents = students.to_dict(orient='list')
 ##################### Initialise Exercise #####################
 
 # split the tasks into [beginning, solution, end]
-def split_exercise(exercise):
-    tasks = exercise.get('text_x')
+def split_exercise(exercise, column_name):
+    tasks = exercise.get(column_name)
     tasks_split = []
 
     for task in tasks:
@@ -64,7 +64,7 @@ def create_task_block(name = None, surname = None, type = 'ML'):
         print(response.json())
         exercise = pd.DataFrame.from_dict(response.json()).to_dict(orient='list')
         print(exercise)
-        tasks_split = split_exercise(exercise)
+        tasks_split = split_exercise(exercise, 'text_x')
         task_ids = exercise.get("task_id")
         
         output = []
@@ -100,11 +100,11 @@ def create_task_block(name = None, surname = None, type = 'ML'):
 
     else:
         output = []
-        response = requests.post(f'{url_backend}/ml', json=json_file)
+        response = requests.post(f'{url_backend}/getexercisehot', json=json_file)
         
         print(response.json())
         exercise = pd.DataFrame.from_dict(response.json()).to_dict(orient='list')
-        tasks_split = split_exercise(exercise)
+        tasks_split = split_exercise(exercise, 'text')
         print(tasks_split)
         task_ids = exercise.get("task_id")
         print(f'exercise taskid: {exercise.get("task_id")}')
@@ -196,11 +196,30 @@ layout = html.Div(style={'backgroundColor':'#FFFFFF'}, children=[
         html.Button('Click when finished', id='finish-button', n_clicks=0, className='button'),
         html.Div(id='time-elapsed-container'),
         html.Br(),
-        html.Div(id='start-time',hidden=True)
+        html.Div(id='start-time',hidden=True), 
+        dcc.Interval(id='interval-component', interval=5000, n_intervals=0)
                 ])
 ])
 
 ################## CALLBACKS AND FUNCTIONS #################
+
+# Callback of select student dropdown ML
+@app.callback(
+    Output('student-selector', 'options'),
+    Input('interval-component', 'n_intervals'),
+)
+
+def update_dropdown(n_intervals):
+    if n_intervals % 5 == 0:
+        print(f'updating dropdown for interval: {n_intervals}')
+        students = pd.read_json(f'{url_backend}/students')
+        students['fullname'] = students['name'] + ' ' +students['surname']
+        sutdents = students.to_dict(orient='list')
+
+        return [{'label': label, 'value': value} for label, value in zip(students.get('fullname'),students.get('fullname'))]
+    else:
+        pass
+
 
 # Callback of select student dropdown ML
 @app.callback(

@@ -506,7 +506,7 @@ a {
 }
 
 .Select-control{
-  border: 0.5px solid #dbdbdb44;
+  border: 0.5px solid #44444444;
 }
 
 .has-value.Select--single>.Select-control .Select-value .Select-value-label, .has-value.is-pseudo-focused.Select--single>.Select-control .Select-value .Select-value-label {
@@ -520,7 +520,7 @@ a {
   position: relative;
 }
 .has-value.Select--single>.Select-control .Select-value .Select-value-label, .has-value.is-pseudo-focused.Select--single>.Select-control .Select-value .Select-value-labeln {
-  color: #d8d8d8;
+  color: #2b2b2b;
   font-weight: 400;
   font-size: 14px;
 }
