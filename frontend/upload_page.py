@@ -20,7 +20,7 @@ app.layout = html.Div(style={'backgroundColor':'#FFFFFF'}, children=[
     html.Div(className='row', style={'backgroundColor':'#FFD6A0','top': '0', 'width':'100%'}, # Top Row and banner
         children=[
             html.H2('Personal German',style={'color': '#333331', 'text-align':'left', 'margin-top':'0px','padding-top':'12px','margin-right': '35px', 'font-size': '30px', 'vertical-align':'center','padding-left':'25px'}),
-            html.H4('Learn Fluent German in 1 Year',style={'color': '#333331', 'text-align':'left', 'margin-right': '35px','font-size': '15px', 'vertical-align':'center','padding-left':'25px'}),
+            html.H4('Learn fluent german in 1 year',style={'color': '#333331', 'text-align':'left', 'margin-right': '35px','font-size': '15px', 'vertical-align':'center','padding-left':'25px'}),
       ]),
     html.Div(className='row', style={'backgroundColor':'#D52330', 'height':'5px'}, # Top red banner
         children=[
@@ -29,25 +29,20 @@ app.layout = html.Div(style={'backgroundColor':'#FFFFFF'}, children=[
       ),
     html.Div(
         children=[
-            html.Div(className='two columns div-for-charts', style={'background':'#393C3D'},
+        html.Div(className='two columns div-for-charts', style={'background':'#393C3D'},
                 children = [
                 html.H2('Teacher View', style={'color': '#FFD6A0','margin-left':'15px'}),
-                html.Br(),
-                dcc.Link('Admin Page', href='https://plot.ly', style={'color': 'white','font':'arial','margin-left':'35px'}), #replace the link!
-                html.Br(),
-                html.A('Exercise', href='https://plot.ly', style={'color': 'white','margin-left':'35px'}), #replace the link!
-                html.Br(),
-                html.A("Dashboard", href='https://plot.ly', style={'color': 'white','margin-left':'35px'}), #replace the link!
-                html.Br(),
-                html.H2('Student View', style={'color': '#FFD6A0','margin-left':'15px'}),
-                html.A("Solve Exercises", href='https://plot.ly', style={'color': 'white','margin-left':'35px'}), #replace the link!
-                html.Br()],
+                dcc.Link('Admin Page', href='https://plot.ly', style={'color': 'white','margin-left':'30px'}), #replace the link!
+                html.A('Upload Data', href='https://plot.ly', style={'color': 'white','margin-left':'30px', 'margin-top':'5px'}), #replace the link!
+                html.A("Performance Dashboard", href='https://plot.ly', style={'color': 'white','margin-left':'30px', 'margin-top':'5px'}), #replace the link!
+                html.H2('Student View', style={'color': '#FFD6A0','margin-left':'15px', 'margin-top':'15px'}),
+                html.A("Solve Exercises", href='https://plot.ly', style={'color': 'white','margin-left':'30px'})], #replace the link!
                 ),
         ]),
     html.Div(className='ten columns div-charts', # Define the right element
         style = { 'display': 'flex', 'flex-direction': 'column', 'height': '100vh','width': '60%'},
         children = [
-            html.H1('Welcome to the upload page'),
+            html.H1('Upload Files',style={'margin-top':'20px'}),
             html.P(id='dataframe-storage', hidden=True), # Create dataframe storage placeholder
             html.Br(),
             dcc.Upload(

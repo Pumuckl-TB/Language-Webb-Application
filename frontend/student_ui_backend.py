@@ -19,35 +19,10 @@ students['fullname'] = students['name'] + ' ' +students['surname']
 sutdents = students.to_dict(orient='list')
 
 ##################### Initialise Exercise #####################
-# -> to be replaced with Backend: GetExercise()
-
-exercise1 = {
-    'grammar_section' : 'Grammar Section...',
-    'block_name' : 'Normal Exercise',
-    'text' : ['[Die] Heimatstadt des Mann ist Porto',
-        'Ich sehe den [schnellen] Mann.', 
-        'Dieses [seminar] ist [zuviel] Arbeit.', 
-        'Ich wünschte ich [hätte] es nie [gewhält]']
-    }
-
-exercise2 = {
-    'grammar_section' : 'Grammar Section...',
-    'block_name' : 'Tatjana Exercise',
-    'text' : ['Die Heimatstadt der [Frau] ist Porto.',
-        'Ich sehe die [schnelle] Frau.']
-    }
-
-exercise_default = {
-    'grammar_section' : 'Please Select Student',
-    'block_name' : 'Please Select Student',
-    'text' : ['Please Select Student',
-        'Ich sehe die [schnelle] Frau.']
-    }
-
 
 # split the tasks into [beginning, solution, end]
 def split_exercise(exercise):
-    tasks = exercise.get('text')
+    tasks = exercise.get('text_x')
     tasks_split = []
 
     for task in tasks:
@@ -80,64 +55,100 @@ def create_task_block(name = None, surname = None, type = 'ML'):
 
     Many of the values are updated via callbacks at the bottom
     '''
-    if name == None or id == 'Select Student':
-        return html.H1('Please select student')
-    else:
-        tasks_split = split_exercise(exercise1)
+    # output = []
+    # if name == None:
+    #     return html.H1('Please select student')
+    # else:
+    #     tasks_split = None
 
     json_file = {'name': name,'surname': surname}
+    
     if type == 'ML':
   
-        response = requests.post('http://localhost:5000/getexerciseml', json=json_file)
+        response = requests.post(f'{url_backend}/ml', json=json_file)
         
         print(response.json())
         exercise = pd.DataFrame.from_dict(response.json()).to_dict(orient='list')
+        print(exercise)
         tasks_split = split_exercise(exercise)
-        print(tasks_split)
+        task_ids = exercise.get("task_id")
+        
+        output = []
+        for i in range(0,len(tasks_split)):
+            if len(tasks_split[i])<3: # task has no blank
+                task_line = html.Div(
+                    children=[
+                        html.P(tasks_split[i][0], style={'display': 'inline-block'}),
+                    ])            
+            if len(tasks_split[i])==3: # task has a maximum of 1 blank
+                task_line = html.Div(
+                    children=[
+                        html.P(tasks_split[i][0], style={'display': 'inline-block'}),
+                        dcc.Input(id={'type':'dynamic-input-ml0','index':i}, value='', type="text", className='input'),
+                        html.P(id={'type':'dynamic-solution-ml0','index':i}, children = tasks_split[i][1], hidden=True), # stores the solution (needed for later) tasks_split[i][1]
+                        html.P(tasks_split[i][2], style={'display': 'inline-block'}),
+                        html.Div(id={'type':'dynamic-output-ml0','index':i}, style={'display': 'inline-block', 'color':'red'})
+                    ])
+            if len(tasks_split[i])>3: # task has 2 blanks
+                task_line = html.Div(
+                    children=[
+                        html.P(tasks_split[i][0], style={'display': 'inline-block'}),
+                        dcc.Input(id={'type':'dynamic-input-ml0','index':i}, value='', type="text", className='input'),
+                        html.P(id={'type':'dynamic-solution-ml0','index':i}, children = tasks_split[i][1], hidden=True), # stores the solution (needed for later)
+                        html.P(tasks_split[i][2], style={'display': 'inline-block'}),
+                        html.Div(id={'type':'dynamic-output-ml0','index':i}, style={'display': 'inline-block', 'color':'red'}),
+                        dcc.Input(id={'type':'dynamic-input-ml1','index':i}, value='', type="text", className='input'),
+                        html.P(id={'type':'dynamic-solution-ml1','index':i}, children = tasks_split[i][3], hidden=True), # stores the solution (needed for later)
+                        html.P(tasks_split[i][4], style={'display': 'inline-block'}),
+                        html.Div(id={'type':'dynamic-output-ml1','index':i}, style={'display': 'inline-block', 'color':'red'})
+                    ])
+            output.append(task_line)
 
     else:
-
-        response = requests.post('http://localhost:5000/getexerciseml', json=json_file)
+        output = []
+        response = requests.post(f'{url_backend}/ml', json=json_file)
         
         print(response.json())
         exercise = pd.DataFrame.from_dict(response.json()).to_dict(orient='list')
         tasks_split = split_exercise(exercise)
         print(tasks_split)
+        task_ids = exercise.get("task_id")
+        print(f'exercise taskid: {exercise.get("task_id")}')
 
-    output = []
-    for i in range(0,len(tasks_split)):
-        if len(tasks_split[i])<3: # task has no blank
-            task_line = html.Div(
-                children=[
-                    html.P(tasks_split[i][0], style={'display': 'inline-block'}),
-                ])            
-        if len(tasks_split[i])==3: # task has a maximum of 1 blank
-            task_line = html.Div(
-                children=[
-                    html.P(tasks_split[i][0], style={'display': 'inline-block'}),
-                    dcc.Input(id={'type':'dynamic-input-ml0','index':i}, value='', type="text", className='input'),
-                    html.P(id={'type':'dynamic-solution-ml0','index':i}, children = tasks_split[i][1], hidden=True), # stores the solution (needed for later) tasks_split[i][1]
-                    html.P(tasks_split[i][2], style={'display': 'inline-block'}),
-                    html.Div(id={'type':'dynamic-output-ml0','index':i}, style={'display': 'inline-block', 'color':'red'})
-                ])
-        if len(tasks_split[i])>3: # task has 2 blanks
-            task_line = html.Div(
-                children=[
-                    html.P(tasks_split[i][0], style={'display': 'inline-block'}),
-                    dcc.Input(id={'type':'dynamic-input-ml0','index':i}, value='', type="text", className='input'),
-                    html.P(id={'type':'dynamic-solution-ml0','index':i}, children = tasks_split[i][1], hidden=True), # stores the solution (needed for later)
-                    html.P(tasks_split[i][2], style={'display': 'inline-block'}),
-                    html.Div(id={'type':'dynamic-output-ml0','index':i}, style={'display': 'inline-block', 'color':'red'}),
-                    dcc.Input(id={'type':'dynamic-input-ml1','index':i}, value='', type="text", className='input'),
-                    html.P(id={'type':'dynamic-solution-ml1','index':i}, children = tasks_split[i][3], hidden=True), # stores the solution (needed for later)
-                    html.P(tasks_split[i][4], style={'display': 'inline-block'}),
-                    html.Div(id={'type':'dynamic-output-ml1','index':i}, style={'display': 'inline-block', 'color':'red'})
-                ])
-        output.append(task_line)
 
+        for i in range(0,len(tasks_split)):
+            
+            if len(tasks_split[i])<3: # task has no blank
+                task_line = html.Div(
+                    children=[
+                        html.P(tasks_split[i][0], style={'display': 'inline-block'}),
+                    ])            
+            if len(tasks_split[i])==3: # task has a maximum of 1 blank
+                task_line = html.Div(
+                    children=[
+                        html.P(tasks_split[i][0], style={'display': 'inline-block'}),
+                        dcc.Input(id={'type':'dynamic-input-hottopic0','index':i}, value='', type="text", className='input'),
+                        html.P(id={'type':'dynamic-solution-hottopic0','index':i}, children = tasks_split[i][1], hidden=True), # stores the solution (needed for later) tasks_split[i][1]
+                        html.P(tasks_split[i][2], style={'display': 'inline-block'}),
+                        html.Div(id={'type':'dynamic-output-hottopic0','index':i}, style={'display': 'inline-block', 'color':'red'})
+                    ])
+            if len(tasks_split[i])>3: # task has 2 blanks
+                task_line = html.Div(
+                    children=[
+                        html.P(tasks_split[i][0], style={'display': 'inline-block'}),
+                        dcc.Input(id={'type':'dynamic-input-hottopic0','index':i}, value='', type="text", className='input'),
+                        html.P(id={'type':'dynamic-solution-hottopic0','index':i}, children = tasks_split[i][1], hidden=True), # stores the solution (needed for later)
+                        html.P(tasks_split[i][2], style={'display': 'inline-block'}),
+                        html.Div(id={'type':'dynamic-output-hottopic0','index':i}, style={'display': 'inline-block', 'color':'red'}),
+                        dcc.Input(id={'type':'dynamic-input-hottopic1','index':i}, value='', type="text", className='input'),
+                        html.P(id={'type':'dynamic-solution-hottopic1','index':i}, children = tasks_split[i][3], hidden=True), # stores the solution (needed for later)
+                        html.P(tasks_split[i][4], style={'display': 'inline-block'}),
+                        html.Div(id={'type':'dynamic-output-hottopic1','index':i}, style={'display': 'inline-block', 'color':'red'})
+                    ])
+            output.append(task_line)
     
-    return output
-
+    return output, task_ids
+    
 
 ######################## Initialise app  ########################
 
@@ -149,30 +160,25 @@ app.layout = html.Div(style={'backgroundColor':'#FFFFFF'}, children=[
     html.Div(className='row', style={'backgroundColor':'#FFD6A0','top': '0', 'width':'100%'}, # Top Row and banner
         children=[
             html.H2('Personal German',style={'color': '#333331', 'text-align':'left', 'margin-top':'0px','padding-top':'12px','margin-right': '35px', 'font-size': '30px', 'vertical-align':'center','padding-left':'25px'}),
-            html.H4('Learn Fluent German in 1 Year',style={'color': '#333331', 'text-align':'left', 'margin-right': '35px','font-size': '15px', 'vertical-align':'center','padding-left':'25px'}),
+            html.H4('Learn fluent german in 1 year',style={'color': '#333331', 'text-align':'left', 'margin-right': '35px','font-size': '15px', 'vertical-align':'center','padding-left':'25px'}),
       ]),
     html.Div(className='row', style={'backgroundColor':'#D52330', 'height':'5px'}, # Top red banner
         children=[
             html.Br(),
         ]
       ),
-    html.Div(
-    children=[
+    #Left Navigation Bar
+    html.Div(children=[
         html.Div(className='two columns div-for-charts', style={'background':'#393C3D'},
                 children = [
                 html.H2('Teacher View', style={'color': '#FFD6A0','margin-left':'15px'}),
-                html.Br(),
-                dcc.Link('Admin Page', href='https://plot.ly', style={'color': 'white','font':'arial','margin-left':'35px'}), #replace the link!
-                html.Br(),
-                html.A('Exercise', href='https://plot.ly', style={'color': 'white','margin-left':'35px'}), #replace the link!
-                html.Br(),
-                html.A("Dashboard", href='https://plot.ly', style={'color': 'white','margin-left':'35px'}), #replace the link!
-                html.Br(),
-                html.H2('Student View', style={'color': '#FFD6A0','margin-left':'15px'}),
-                html.A("Solve Exercises", href='https://plot.ly', style={'color': 'white','margin-left':'35px'}), #replace the link!
-                html.Br()],
+                dcc.Link('Admin Page', href='https://plot.ly', style={'color': 'white','margin-left':'30px'}), #replace the link!
+                html.A('Upload Data', href='https://plot.ly', style={'color': 'white','margin-left':'30px', 'margin-top':'5px'}), #replace the link!
+                html.A("Performance Dashboard", href='https://plot.ly', style={'color': 'white','margin-left':'30px', 'margin-top':'5px'}), #replace the link!
+                html.H2('Student View', style={'color': '#FFD6A0','margin-left':'15px', 'margin-top':'15px'}),
+                html.A("Solve Exercises", href='https://plot.ly', style={'color': 'white','margin-left':'30px'})], #replace the link!
                 ),
-    ]),
+        ]),
     html.Div(className='ten columns div-charts', # Define the right element
                 style = { 'display': 'flex', 'flex-direction': 'column', 'height': '100vh','width': '60%'},
                 children = [
@@ -188,16 +194,17 @@ app.layout = html.Div(style={'backgroundColor':'#FFFFFF'}, children=[
         html.Div(id='output_temp'),
         html.H3('Machine Learning Exercise'),
         # ML block type
-        html.Div(children = create_task_block(name, surname, type = 'ML'), id = 'block-container-ml'),      
+        html.Div(id = 'block-container-ml'),      # children = create_task_block(name, surname, type = 'ML')
         
         html.Br(),
         
         html.H3('Hot Topic Exercise'),
         # Hot Topic block type
-        html.Div(children = create_task_block(name, surname, type = 'Hot Topic'), id = 'block-container-hottopic'),
+        html.Div(id = 'block-container-hottopic'), # children = create_task_block(name, surname, type = 'Hot Topic')[0]
         html.Br(),
         html.Button('Click when finished', id='finish-button', n_clicks=0, className='button'),
         html.Div(id='time-elapsed-container'),
+        html.Br(),
         html.Div(id='start-time',hidden=True)
                 ])
 ])
@@ -211,11 +218,11 @@ app.layout = html.Div(style={'backgroundColor':'#FFFFFF'}, children=[
 )
 
 def update_taskblock_ml(value):
-    print(f'New Student selected: {value}' )
+    print(f'New Student selected ml: {value}')
     name = value.split(' ')[0]
     surname = value.split(' ')[1]
 
-    return create_task_block(name, surname, type = 'ML')
+    return create_task_block(name, surname, type = 'ML')[0]
 
 
 # Callback of select student dropdown hot topic
@@ -224,10 +231,10 @@ def update_taskblock_ml(value):
     Input('student-selector', 'value'),
 )
 def update_taskblock_hottopic(value):
-    print(f'New Student selected: {value}' )
+    print(f'New Student selected ht: {value}' )
     name = value.split(' ')[0]
     surname = value.split(' ')[1]
-    return create_task_block(name, surname, type = 'Hot Topic')
+    return create_task_block(name, surname, type = 'Hot Topic')[0]
 
 # Callback of select student to start timer
 @app.callback(
@@ -309,20 +316,36 @@ def update_taskinput(value, children):
 @app.callback(
     Output('time-elapsed-container', 'children'),
     Input('finish-button', 'n_clicks'),
-    Input('start-time', 'children')
+    Input('start-time', 'children'),
+    Input('student-selector', 'value')
+
 )
-def finish_button_press(n_clicks, children):
+def finish_button_press(n_clicks, children, value):
     output = None 
+
+    name = value.split(' ')[0]
+    surname = value.split(' ')[1]
+
     # Check if button has been clicked
     changed_id = [p['prop_id'] for p in dash.callback_context.triggered][0]
     if 'finish-button' in changed_id and n_clicks>0:
         end = time.time()
         start = children
-        output = f'Time elapsed: {(end - start)/60} minutes'
+        elapsed = (end - start)
+        output = f'Time elapsed: {round(elapsed/60,2)} minutes'
+        task_ids = create_task_block(name, surname, type = 'ML')[1]
+        task_ids += create_task_block(name, surname, type = 'Hot Topic')[1]
+
+        json_list = [[]]
+        for task in task_ids:
+            row = [name, surname, task, (elapsed)/len(task_ids)]
+            json_list.append(row)
+        json_output = pd.DataFrame(columns=['name','surname','task','elapsed'], data=json_list).dropna().to_json()
+ 
+        print(json_output)
+        
     else:
         pass
-
-    # API CALL HERE: write time used to db
 
     return output
 
@@ -331,5 +354,3 @@ def finish_button_press(n_clicks, children):
 if __name__ == '__main__':
     app.run_server(debug=True, use_reloader=False)
     # app.run_server(host = '0.0.0.0', port = 8050, debug = True)
-
-
