@@ -43,7 +43,7 @@ For this project to work you will need to have python3 installed. Additionally, 
     │   └── ...    
     ├── frontend                    
     │   ├── apps                    # Contains all pages (layouts, callbacks, functions)
-    │   │   ├── __init__.py         # Necessary for multipage apps
+    │   │   ├── __init__.py
     │   │   ├── admin.py            # Admin layout, callbacks, functions
     │   │   ├── dashboard.py        # Dashboard layout, callbacks, functions
     │   │   ├── exercise.py         # Exercise layout, callbacks, functions

@@ -169,14 +169,21 @@ layout = html.Div(style={'backgroundColor':'#FFFFFF'},
     Input('add_student_placeholder', 'children')
     )
 
-def update_table(children1, children2):
+def update_table(children1, children2, placeholder='update'):
     '''
     This function retrieves the new Dataframe when there is an update.
     '''
+    if placeholder == 'update':
+        placeholder = 'dont update'
+        print('updating table')
+        df = pd.read_json(f'{url_backend}/students')
+        return df.to_dict('records')
 
-    print('updating table')
-    df = pd.read_json(f'{url_backend}/students')
-    return df.to_dict('records')
+    if children1 is not None or children2 is not None:
+        print('updating table')
+        df = pd.read_json(f'{url_backend}/students')
+        return df.to_dict('records')
+        
 
 
 @app.callback(
@@ -290,7 +297,7 @@ def add_button_press(n_clicks, firstname, lastname, email, exercise_duration, ob
 @app.callback(
     Output('topic_id_temp', 'data'), 
     Input('tbl-ht', 'selected_rows'),
-    Input('tbl-ht','data'),
+    Input('tbl-ht','data')
     )
 
 
@@ -326,10 +333,12 @@ def assign_button_press(n_clicks, student_firstname_lastname, topic_id_temp):
     changed_id = [p['prop_id'] for p in dash.callback_context.triggered][0]
     if 'assign-button' in changed_id and n_clicks>0:
         print('click registered')
-        # 2. Drop student with the respective ID
         print(f"assigning  exercise {topic_id_temp} to student {student_firstname_lastname}")
-        # API CALL here
-    
+        add = {'item_id':topic_id_temp}
+        student_firstname_lastname.update(add)
+        response = requests.post('http://localhost:5000/assignhot', json=student_firstname_lastname)
+        print(response.text)
+            
     else:
         print("assign button press has passed")
         pass
