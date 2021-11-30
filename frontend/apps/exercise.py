@@ -80,7 +80,7 @@ def create_task_block(name = None, surname = None, type = 'ML'):
                 task_line = html.Div(
                     children=[
                         html.P(tasks_split[i][0], style={'display': 'inline-block'}),
-                        dcc.Input(id={'type':'dynamic-input-ml0','index':i}, value='', type="text", className='input'),
+                        dcc.Input(id={'type':'dynamic-input-ml0','index':i}, value='', type="text", className='input', style={'height':'90%','width':'100px'}),
                         html.P(id={'type':'dynamic-solution-ml0','index':i}, children = tasks_split[i][1], hidden=True), # stores the solution (needed for later) tasks_split[i][1]
                         html.P(tasks_split[i][2], style={'display': 'inline-block'}),
                         html.Div(id={'type':'dynamic-output-ml0','index':i}, style={'display': 'inline-block', 'color':'blue', 'font-family':'arial'})
@@ -89,11 +89,11 @@ def create_task_block(name = None, surname = None, type = 'ML'):
                 task_line = html.Div(
                     children=[
                         html.P(tasks_split[i][0], style={'display': 'inline-block'}),
-                        dcc.Input(id={'type':'dynamic-input-ml0','index':i}, value='', type="text", className='input'),
+                        dcc.Input(id={'type':'dynamic-input-ml0','index':i}, value='', type="text", className='input', style={'height':'90%','width':'100px'}),
                         html.P(id={'type':'dynamic-solution-ml0','index':i}, children = tasks_split[i][1], hidden=True), # stores the solution (needed for later)
-                        html.P(tasks_split[i][2], style={'display': 'inline-block'}),
                         html.Div(id={'type':'dynamic-output-ml0','index':i}, style={'display': 'inline-block', 'color':'blue', 'font-family':'arial'}),
-                        dcc.Input(id={'type':'dynamic-input-ml1','index':i}, value='', type="text", className='input'),
+                        html.P(tasks_split[i][2], style={'display': 'inline-block'}),
+                        dcc.Input(id={'type':'dynamic-input-ml1','index':i}, value='', type="text", className='input', style={'height':'90%','width':'100px'}),
                         html.P(id={'type':'dynamic-solution-ml1','index':i}, children = tasks_split[i][3], hidden=True), # stores the solution (needed for later)
                         html.P(tasks_split[i][4], style={'display': 'inline-block'}),
                         html.Div(id={'type':'dynamic-output-ml1','index':i}, style={'display': 'inline-block', 'color':'blue', 'font-family':'arial'})
@@ -123,7 +123,7 @@ def create_task_block(name = None, surname = None, type = 'ML'):
                 task_line = html.Div(
                     children=[
                         html.P(tasks_split[i][0], style={'display': 'inline-block'}),
-                        dcc.Input(id={'type':'dynamic-input-hottopic0','index':i}, value='', type="text", className='input'),
+                        dcc.Input(id={'type':'dynamic-input-hottopic0','index':i}, value='', type="text", className='input', style={'height':'90%','width':'100px'}),
                         html.P(id={'type':'dynamic-solution-hottopic0','index':i}, children = tasks_split[i][1], hidden=True), # stores the solution (needed for later) tasks_split[i][1]
                         html.P(tasks_split[i][2], style={'display': 'inline-block'}),
                         html.Div(id={'type':'dynamic-output-hottopic0','index':i}, style={'display': 'inline-block', 'color':'blue', 'font-family':'arial'})
@@ -132,11 +132,11 @@ def create_task_block(name = None, surname = None, type = 'ML'):
                 task_line = html.Div(
                     children=[
                         html.P(tasks_split[i][0], style={'display': 'inline-block'}),
-                        dcc.Input(id={'type':'dynamic-input-hottopic0','index':i}, value='', type="text", className='input'),
+                        dcc.Input(id={'type':'dynamic-input-hottopic0','index':i}, value='', type="text", className='input', style={'height':'90%','width':'100px'}),
                         html.P(id={'type':'dynamic-solution-hottopic0','index':i}, children = tasks_split[i][1], hidden=True), # stores the solution (needed for later)
-                        html.P(tasks_split[i][2], style={'display': 'inline-block'}),
                         html.Div(id={'type':'dynamic-output-hottopic0','index':i}, style={'display': 'inline-block', 'color':'blue', 'font-family':'arial'}),
-                        dcc.Input(id={'type':'dynamic-input-hottopic1','index':i}, value='', type="text", className='input'),
+                        html.P(tasks_split[i][2], style={'display': 'inline-block'}),
+                        dcc.Input(id={'type':'dynamic-input-hottopic1','index':i}, value='', type="text", className='input', style={'height':'90%','width':'100px'}),
                         html.P(id={'type':'dynamic-solution-hottopic1','index':i}, children = tasks_split[i][3], hidden=True), # stores the solution (needed for later)
                         html.P(tasks_split[i][4], style={'display': 'inline-block'}),
                         html.Div(id={'type':'dynamic-output-hottopic1','index':i}, style={'display': 'inline-block', 'color':'blue', 'font-family':'arial'})
