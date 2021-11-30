@@ -1,1 +1,1 @@
-url_backend = 'http://localhost:5000'
+url_backend = 'http://34.88.108.35:5000'
