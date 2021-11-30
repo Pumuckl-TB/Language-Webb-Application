@@ -8,6 +8,7 @@ import dash_bootstrap_components as dbc
 import base64
 import io
 import pandas as pd
+import requests
 from app import app
 from links import url_backend
 
@@ -93,15 +94,16 @@ def parse_contents(contents, filename):
 
     if 'word_instance' in df.columns:
         upload_type = 'exercise'
-        json_file = df.to_json()
+        json_file = df.to_dict()
         print(json_file)
         # API CALL HERE
 
     else:
         upload_type = 'word info'
-        json_file = df.to_json()
+        json_file = df.to_dict()
         print(json_file)
-        # API CALL HERE
+        response = requests.post('http://localhost:5000/uploadinfo', json=json_file)
+        print(response.text)
 
     return html.Div([
         html.H5(f'The following {upload_type} file was uploaded: {filename}'),
