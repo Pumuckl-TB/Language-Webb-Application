@@ -37,8 +37,8 @@ engine = create_engine('postgresql://admin_group1:pXysH3Qdhz7ZLhkRgz89mTQCQG@35.
 
 
 
-# ADD STUDENT QUERY
-@app.route('/addstudent', methods=['GET','POST'])
+# Add new student
+@app.route('/addstudent', methods=['GET', 'POST'])
 def addstudent():
 
     # Get new student data
@@ -68,8 +68,7 @@ def addstudent():
 
     return jsonify({'message': 'student added'})
 
-
-# Get ML assigned exercise
+# Assign hot topic exercise
 @app.route('/assignhot', methods=['GET', 'POST'])
 def assignhot():
 
@@ -88,13 +87,12 @@ def assignhot():
             hot_topics_all.loc[row, 'item_id'] = hot_topics['item_id']
 
     # Load it back into the database.
-    hot_topics_all.to_sql('hot_topics_all', engine, if_exists="append", method='multi', index=False)
+    hot_topics_all.to_sql('hot_topics_all', engine, if_exists="replace", method='multi', index=False)
 
     return jsonify({'message': 'HotTopic assigned'})
 
-
-# DELETE STUDENT QUERY
-@app.route('/deletestudent', methods=['GET','POST'])
+# Delete a students
+@app.route('/deletestudent', methods=['GET', 'POST'])
 def deletestudent():
 
     delete_student = json.loads(request.data)
@@ -114,7 +112,7 @@ def deletestudent():
 
     return jsonify({'message': 'student deleted'})
 
-
+# Get all students
 @app.route('/students', methods=['GET'])
 def get_students():
     students = pd.read_sql('users2', engine)
@@ -122,7 +120,7 @@ def get_students():
 
     return students
 
-
+# Get exercise hot topic
 @app.route('/getexercisehot', methods=['GET', 'POST'])
 def getexercisehot():
 
@@ -145,7 +143,7 @@ def getexercisehot():
     exercise_hot_topics = exercise_hot_topics.to_json()
     return exercise_hot_topics
 
-
+# Get exercise machine learning
 @app.route('/ml', methods=['GET', 'POST'])
 def ml():
     # ML assign
@@ -186,7 +184,7 @@ def ml():
 
     return ml_output
 
-
+# Get student progress
 @app.route('/progress', methods=['GET', 'POST'])
 def progress():
     propgress_items = pd.read_sql('progress_items2', engine)
@@ -194,7 +192,7 @@ def progress():
 
     return propgress_items
 
-
+# Return answer
 @app.route('/returnanswer', methods=['GET', 'POST'])
 def returnanswer():
     # get dataframe from the database.
@@ -215,6 +213,45 @@ def returnanswer():
     answers_returned.to_sql('answers2', engine, if_exists="append", method='multi', index=False)
 
     return jsonify({'message': 'answer returned'})
+
+# Upload word_info
+@app.route('/uploadinfo', methods=['GET', 'POST'])
+def uploadinfo():
+    #new_word_info = json.loads(request.data)
+    #new_word_info = pd.read_json(new_word_info)
+    new_word_info = json.loads(request.data)
+    new_word_info = pd.DataFrame.from_dict(new_word_info, orient='index')
+    new_word_info = new_word_info.transpose()
+
+    # Append the new rows to the word_info dataframe
+    word_info = pd.read_sql('word_info2', engine)
+    column_list = ['word_instance', "word_type", "basic_form", "level", "frequency"]
+    new_word_info = new_word_info.set_axis(column_list, axis=1, inplace=False)
+    word_info = word_info.append(new_word_info)
+
+    # Create the instance_id's
+    # Create column with numbering for the instance_id
+    instance_id_list = ['instance_id_' + str(x) for x in range(len(word_info))]
+    word_info["instance_id"] = instance_id_list
+
+    # Reset the index to structure the index column
+    word_info = pd.DataFrame(word_info.reset_index())
+    word_info = word_info.drop(columns='index')
+
+    # Write the updated word_info into the database
+    word_info.to_sql('word_info2', engine, if_exists="replace", method='multi', index=False)
+
+    # Update tasks since tasks is linked via instance_id
+    tasks = pd.read_sql('tasks2', engine)
+    tasks = tasks.drop(columns='instance_id')
+    tasks = pd.merge(tasks, word_info[["word_instance", "word_type", "basic_form", "instance_id"]],
+                     how="left", on=["word_instance", "word_type", "basic_form"])
+
+    # Write the updated tasks into the database
+    tasks.to_sql('tasks2', engine, if_exists="replace", method='multi', index=False)
+
+    return jsonify({'message': 'word_info uploaded'})
+
 
 
 if __name__ == '__main__':
