@@ -29,20 +29,17 @@ For this project to work you will need to have python3 installed. Additionally, 
     `pip install -r requirements.txt`
 3. Create and fill PostgreSQL database (contact authors for more information)
 4. Adjust backend server script with your database credentials
-5. Start backend server by running file `TIMON PLS SPECIFY`
-6. Adjust link to backend by changing `url_backend` in `frontend\links.py`
-6. Start frontend by running file `frontend\index.py`
-7. Open the website in your browser (default: `'http://127.0.0.1:8050/'`)
+5. Start backend server by running file `backend/backend_deploy.py`
+6. Adjust link to backend by changing `url_backend` in `frontend/links.py`
+6. Start frontend by running file `frontend/index.py`
+7. Open the website in your browser (default: `http://localhost:8050/`)
 
 
 ## Folder Structure
     .
     ├── backend                     
-    │   ├── ...                     # ...
-    │   ├── ...                     # ...
-    │   ├── ...                     # ...
-    │   ├── ...                     # ...
-    │   └── ...    
+    │   ├── backend_deploy.py       # Backend script containing all functionalities
+    │   └── ML.ipynb                # Machine Learning Notebook showing the random forest specifications
     ├── frontend                    
     │   ├── apps                    # Contains all pages (layouts, callbacks, functions)
     │   │   ├── __init__.py
