@@ -7,9 +7,11 @@ import pandas as pd
 import dash_bootstrap_components as dbc
 import re
 import time
+from pandas.io import json
 import requests
 from app import app
 from links import url_backend
+from datetime import date
 
 ##################### Intialise Students ######################
 
@@ -64,7 +66,7 @@ def create_task_block(name = None, surname = None, type = 'ML'):
         print(response.json())
         exercise = pd.DataFrame.from_dict(response.json()).to_dict(orient='list')
         print(exercise)
-        tasks_split = split_exercise(exercise, 'text_x')
+        tasks_split = split_exercise(exercise, 'text')
         task_ids = exercise.get("task_id")
         
         output = []
@@ -197,7 +199,7 @@ layout = html.Div(style={'backgroundColor':'#FFFFFF'}, children=[
         html.Div(id='time-elapsed-container'),
         html.Br(),
         html.Div(id='start-time',hidden=True), 
-        dcc.Interval(id='interval-component', interval=5000, n_intervals=0)
+        dcc.Interval(id='interval-component', interval=10000, n_intervals=0)
                 ])
 ])
 
@@ -210,15 +212,15 @@ layout = html.Div(style={'backgroundColor':'#FFFFFF'}, children=[
 )
 
 def update_dropdown(n_intervals):
-    if n_intervals % 5 == 0:
-        print(f'updating dropdown for interval: {n_intervals}')
-        students = pd.read_json(f'{url_backend}/students')
-        students['fullname'] = students['name'] + ' ' +students['surname']
-        sutdents = students.to_dict(orient='list')
+    # if n_intervals % 5 == 0:
+    print(f'updating dropdown for interval: {n_intervals}')
+    students = pd.read_json(f'{url_backend}/students')
+    students['fullname'] = students['name'] + ' ' +students['surname']
+    sutdents = students.to_dict(orient='list')
 
-        return [{'label': label, 'value': value} for label, value in zip(students.get('fullname'),students.get('fullname'))]
-    else:
-        pass
+    return [{'label': label, 'value': value} for label, value in zip(students.get('fullname'),students.get('fullname'))]
+    # else:
+    #     pass
 
 
 # Callback of select student dropdown ML
@@ -339,20 +341,34 @@ def finish_button_press(n_clicks, children, value):
     # Check if button has been clicked
     changed_id = [p['prop_id'] for p in dash.callback_context.triggered][0]
     if 'finish-button' in changed_id and n_clicks>0:
+        print('finish-button clicked')
         end = time.time()
         start = children
         elapsed = (end - start)
         output = f'Time elapsed: {round(elapsed/60,2)} minutes'
-        task_ids = create_task_block(name, surname, type = 'ML')[1]
-        task_ids += create_task_block(name, surname, type = 'Hot Topic')[1]
-
+        try:
+            task_ids = create_task_block(name, surname, type = 'ML')[1]
+        except:
+            task_ids = []
+        try:
+            task_ids += create_task_block(name, surname, type = 'Hot Topic')[1]
+        except:
+            task_ids += []
+        print(f'task_ids: {task_ids}')
         json_list = [[]]
         for task in task_ids:
             row = [name, surname, task, (elapsed)/len(task_ids)]
             json_list.append(row)
-        json_output = pd.DataFrame(columns=['name','surname','task','elapsed'], data=json_list).dropna().to_json()
+        print(f'json_list : {json_list}')
+        json_output = pd.DataFrame(columns=['name','surname','task_id','duration'], data=json_list)
+        json_output['started_at'] = date.today().strftime("%d.%m.%y")
+        json_output['finished'] = True
+        json_output.dropna(inplace=True)
+        json_output = json_output.to_dict(orient='list')
  
         print(json_output)
+        response = requests.post(f'{url_backend}/returnanswer', json=json_output)
+        print(response.text)
         
     else:
         pass
