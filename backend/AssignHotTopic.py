@@ -46,13 +46,13 @@ def assignhot():
     # TEACHER ASSIGNS
     # First get the dataframe from the database.
     hot_topics_all = pd.read_sql('hot_topics_all', engine)
-    users = pd.read_sql('users2', engine)
+    #users = pd.read_sql('users2', engine)
 
     # Post from frontend (TEACHER UI) - information about hot topics as dictionary
     hot_topics = json.loads(request.data)
 
     # Search the student in hot_topics_all. Loop through the rows, assign the item_id to the student.
-    for row in range(len(users)):
+    for row in range(len(hot_topics_all)):
         if hot_topics_all.loc[row, 'name'] == hot_topics['name'] and hot_topics_all.loc[row, 'surname'] == hot_topics['surname']:
             hot_topics_all.loc[row, 'item_id'] = hot_topics['item_id']
 
