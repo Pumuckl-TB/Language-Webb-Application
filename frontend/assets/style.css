@@ -493,8 +493,8 @@ a {
   padding-bottom: 12px;
 }
 .Select-control, .Select-menu-outer, .Select-multi-value-wrapper, .select-up, .is-open .Select-control {
-  background-color: #1E1E1E;
-  color: white;
+  background-color: #e4e4e4;
+  color: rgb(0, 0, 0);
 
 }
 
@@ -506,13 +506,13 @@ a {
 }
 
 .Select-control{
-  border: 0.5px solid #dbdbdb44;
+  border: 0.5px solid #44444444;
 }
 
 .has-value.Select--single>.Select-control .Select-value .Select-value-label, .has-value.is-pseudo-focused.Select--single>.Select-control .Select-value .Select-value-label {
-  color: white;
-  background: #1E1E1E;
-  background-color: #1E1E1E;
+  color: rgb(0, 0, 0);
+  background: #e4e4e4;
+  background-color: #e4e4e4;
 }
 ._dash-app-content {
   overflow-x: hidden;
@@ -520,7 +520,7 @@ a {
   position: relative;
 }
 .has-value.Select--single>.Select-control .Select-value .Select-value-label, .has-value.is-pseudo-focused.Select--single>.Select-control .Select-value .Select-value-labeln {
-  color: #d8d8d8;
+  color: #2b2b2b;
   font-weight: 400;
   font-size: 14px;
 }
