@@ -102,7 +102,7 @@ def parse_contents(contents, filename):
         upload_type = 'word info'
         json_file = df.to_dict()
         print(json_file)
-        response = requests.post('http://localhost:5000/uploadinfo', json=json_file)
+        response = requests.post(f'{url_backend}/uploadinfo', json=json_file)
         print(response.text)
 
     return html.Div([

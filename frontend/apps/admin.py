@@ -23,7 +23,6 @@ layout = html.Div(style={'backgroundColor':'#FFFFFF'},
     children=[
     html.P(id='delete_student_placeholder', hidden=True), # Create placeholder for functions without callback
     html.P(id='add_student_placeholder', hidden=True), # Create placeholder for functions without callback
-    html.P(id='assign-placeholder', hidden=True), # Create placeholder for functions without callback
     dcc.Store(id='student_firstname_lastname'), # Create storage value for get_row_info()
     dcc.Store(id='topic_id_temp'), # Create storage value for get_row_info()
             
@@ -152,7 +151,8 @@ layout = html.Div(style={'backgroundColor':'#FFFFFF'},
                 html.P('''Select Student, exercise, and click "Assign"''', style={'display': 'inline-block', 'color':'black'}),
                 
                 # Assign Button
-                html.Button('Assign Item', id='assign-button', n_clicks=0, className='button'),
+                html.Button('Assign Item', id='assign-button', n_clicks=0, className='button', style={'margin-left':'5px'}),
+                html.Div(id='assign-placeholder' , style={'display': 'inline-block', 'font-family':'arial', 'margin-left':'10px'})
 
                 ]),
             ]),
@@ -338,6 +338,7 @@ def assign_button_press(n_clicks, student_firstname_lastname, topic_id_temp):
         student_firstname_lastname.update(add)
         response = requests.post('http://localhost:5000/assignhot', json=student_firstname_lastname)
         print(response.text)
+        return f"Succes: Exercise {topic_id_temp} assigned to {student_firstname_lastname.get('name')}"
             
     else:
         print("assign button press has passed")
