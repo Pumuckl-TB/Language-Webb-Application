@@ -59,5 +59,5 @@ For this project to work you will need to have python3 installed. Additionally, 
 
 There are no direct connections from frontend to database, which allows for a modular architecture. The architecture is depicted in the picture below.
 
-![Architecture](https://raw.githubusercontent.com/feljost/Language-WebApp/main/pictures/architecture.JPG?token=APCQ7XC7M46ZSRZI2UUXPFDBUYIXW)
+![Architecture](https://github.com/feljost/Language-WebApp/blob/main/pictures/architecture.JPG?raw=true)
 
