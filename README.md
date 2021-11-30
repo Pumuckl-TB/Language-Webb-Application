@@ -1,4 +1,4 @@
-# Language-WebApp
+# Language learning Web Application for Personal-German
 
 Web application prototype for a language school including many functionalities and machine learning. This app was developed for a seminar at the University of Zurich, hosted by Radu Tanase and Debora Costa.
 
@@ -8,14 +8,14 @@ The Application consists of 3 main parts:
 3. Dash Frontend
 
 The app was developed for personal-german.ch according to their requirements. It offers the following functionality:
-    - Admin functions:
-        - View, Add, and Delete students
-        - Assign topics to students (exercises for them to solve)
-    - Dashboard:
-        - View Student Progress
-    - Student Functions:
-        - Solve exercises that are assigned to them by the teacher
-        - Solve exercises that are assigned via a Machine Learning algorithm
+- Admin functions:  
+    - View, Add, and Delete students  
+    - Assign topics to students (exercises for them to solve)  
+- Dashboard:  
+    - View Student Progress  
+- Student Functions:  
+    - Solve exercises that are assigned to them by the teacher  
+    - Solve exercises that are assigned via a Machine Learning algorithm  
 
 ## Setup
 
