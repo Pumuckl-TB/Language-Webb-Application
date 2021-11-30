@@ -35,7 +35,7 @@ For this project to work you will need to have python3 installed. Additionally, 
 
 ## Folder Structure
     .
-    ├── backend                     # Backend folder
+    ├── backend                     
     │   ├── ...                     # ...
     │   ├── ...                     # ...
     │   ├── ...                     # ...
@@ -52,6 +52,7 @@ For this project to work you will need to have python3 installed. Additionally, 
     │   │   └── style.css           # Stylesheet                  
     │   ├── app.py                  # Creates app and server
     │   └── index.py                # Main frontend file which renders everything
+    ├── pictures                    # For documentation purposes 
     ├── requirements.txt            
     └── readme.md
 
