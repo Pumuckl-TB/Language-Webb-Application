@@ -1,6 +1,6 @@
 # Language learning Web Application for Personal-German
 
-Web application prototype for a language school including many functionalities and machine learning. This app was developed for a seminar at the University of Zurich, hosted by Radu Tanase and Debora Costa.
+Web application prototype for a language school including many functionalities and machine learning. This app was developed for a seminar at the University of Zurich, hosted by Radu Tanase and Debora Costa. The main idea is for the language school to have a web app where the students can directly solve language exercises. These exercises are assigned to the students either by Machine Learning or they assigned to them by the teacher. Additionally the teacher has the option to manage students, upload exercises and meta information files, assign execercises to students, and track their students performance in real time.
 
 The Application consists of 3 main parts:
 1. PostgreSQL Database (ommited from GitHub)
@@ -10,7 +10,9 @@ The Application consists of 3 main parts:
 The app was developed for personal-german.ch according to their requirements. It offers the following functionality:
 - Admin functions:  
     - View, Add, and Delete students  
-    - Assign topics to students (exercises for them to solve)  
+    - Assign topics to students (exercises for them to solve) 
+    - Upload exercise files
+    - Upload meta information files 
 - Dashboard:  
     - View Student Progress  
 - Student Functions:  
