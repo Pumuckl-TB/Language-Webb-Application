@@ -1,8 +1,24 @@
 # Language-WebApp
 
-Web application prototype for a language school including many functionalities and machine learning.
+Web application prototype for a language school including many functionalities and machine learning. This app was developed for a seminar at the University of Zurich, hosted by Radu Tanase and Debora Costa.
 
-### Setup instructions
+The Application consists of 3 main parts:
+1. PostgreSQL Database (ommited from GitHub)
+2. Flask Backend
+3. Dash Frontend
+
+The app was developed for personal-german.ch according to their requirements. It offers the following functionality:
+    - Admin functions:
+        - View, Add, and Delete students
+        - Assign topics to students (exercises for them to solve)
+    - Dashboard:
+        - View Student Progress
+    - Student Functions:
+        - Solve exercises that are assigned to them by the teacher
+        - Solve exercises that are assigned via a Machine Learning algorithm
+
+
+## Setup instructions
 
 For this project to work you will need to have python3 installed. Additionally, you will need access to a PostgreSQL database. As the data comes from personal-german.ch and is confidential, we have ommitted the database schemas and data from this repository. If you really want to test out the app, please contact one of the contributors via GitHub.
 
@@ -18,7 +34,7 @@ For this project to work you will need to have python3 installed. Additionally, 
 7. Open the website in your browser (default: 'http://127.0.0.1:8050/')
 
 
-### Folder Structure
+## Folder Structure
     .
     ├── backend                     # Backend folder
     │   ├── ...                     # ...
@@ -39,3 +55,7 @@ For this project to work you will need to have python3 installed. Additionally, 
     │   └── index.py                # Main frontend file which renders everything
     ├── requirements.txt            
     └── readme.md
+
+## Architecture
+
+![Architecture](https://raw.githubusercontent.com/feljost/Language-WebApp/main/pictures/architecture.JPG?token=APCQ7XGRMHSTIQSL53I4A3TBUYHUO)
