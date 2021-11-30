@@ -9,7 +9,7 @@ import base64
 import io
 import pandas as pd
 from app import app
-
+from links import url_backend
 
 df = pd.DataFrame()
 ######################## Dash App Layout  ########################

@@ -24,6 +24,8 @@ def display_page(pathname):
         return upload.layout
     if pathname == '/apps/exercise':
         return exercise.layout
+    if pathname == '/':
+        return admin.layout
     else:
         return "404 Page Error!"
 

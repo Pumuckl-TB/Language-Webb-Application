@@ -7,14 +7,13 @@ import pandas as pd
 import dash_bootstrap_components as dbc
 import requests
 from app import app
+from links import url_backend
 
 
 ##################### Get Dataframes  ###########################
 
-url_backend = 'http://localhost:5000'
 df = pd.read_json(f'{url_backend}/students')
 df_ht = pd.read_json(f'{url_backend}/progress')
-
 
 
 ######################## Dash App Layout  ########################

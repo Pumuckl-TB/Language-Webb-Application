@@ -9,11 +9,11 @@ import re
 import time
 import requests
 from app import app
-
+from links import url_backend
 
 ##################### Intialise Students ######################
 
-url_backend = 'http://localhost:5000'
+
 students = pd.read_json(f'{url_backend}/students')
 students['fullname'] = students['name'] + ' ' +students['surname']
 sutdents = students.to_dict(orient='list')
