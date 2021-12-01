@@ -48,7 +48,7 @@ app.layout = html.Div(style={'backgroundColor':'#FFFFFF'}, children=[
             dcc.Upload(
                 id='upload-data',
                 children=html.Div([
-                    'Drag and Drop or ',
+                    html.P('Drag and Drop or '),
                     html.A('Select Files')
                 ]),
                 style={
