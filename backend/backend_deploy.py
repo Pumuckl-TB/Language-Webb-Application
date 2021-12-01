@@ -140,6 +140,8 @@ def getexercisehot():
     exercise_hot_topics = hot_topics_all[(hot_topics_all['name'] == hot_topics['name']) &
                                          (hot_topics_all['surname'] == hot_topics['surname'])]
 
+    exercise_hot_topics = exercise_hot_topics.drop_duplicates(subset=['text'], keep='first')
+
     exercise_hot_topics = exercise_hot_topics.to_json()
     return exercise_hot_topics
 
