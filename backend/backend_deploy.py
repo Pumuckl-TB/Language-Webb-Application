@@ -133,7 +133,7 @@ def getexercisehot():
     tasks = pd.read_sql('tasks2', engine)
 
     # Merge the hot_topics_all and the tasks dataframe to receive the task for the given student and item_id
-    hot_topics_all = pd.merge(hot_topics_all, tasks[["item_id", "block_name", "block_id", "task_id", "text"]],
+    hot_topics_all = pd.merge(hot_topics_all, tasks[["item_id", "block_name", "block", "task_id", "text"]],
                               how="left", on=["item_id"])
 
     # Select only the recommended student from the table.
@@ -143,6 +143,7 @@ def getexercisehot():
     exercise_hot_topics = exercise_hot_topics.drop_duplicates(subset=['text'], keep='first')
 
     exercise_hot_topics = exercise_hot_topics.to_json()
+    
     return exercise_hot_topics
 
 # Get exercise machine learning
