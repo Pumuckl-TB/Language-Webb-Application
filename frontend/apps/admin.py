@@ -192,7 +192,7 @@ def update_table(children1, children2, placeholder='update'):
 @app.callback(
     Output('student_firstname_lastname', 'data'), # student_firstname_lastname is used to save studentID in dcc.Store
     Input('tbl', 'selected_rows'),
-    Input('tbl','data'),
+    Input('tbl', 'data'),
     )
 
 def get_row_info(selected_rows, data):
@@ -200,6 +200,8 @@ def get_row_info(selected_rows, data):
     Function which retrieves the info of the selected row.
     '''
     print(f'selected row: {selected_rows}')
+    print(type(data))
+    print(data)
 
     name = df.loc[selected_rows,'name'].values
     surname = df.loc[selected_rows,'surname'].values
