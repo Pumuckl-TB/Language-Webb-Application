@@ -94,6 +94,7 @@ def parse_contents(contents, filename):
 
     if 'tempus' in df.columns:
         upload_type = 'exercise'
+        df.rename(columns={ df.columns[1]: "word_instance" }, inplace = True)
         json_file = df.to_dict()
         print(json_file)
         response = requests.post(f'{url_backend}/uploadexc', json=json_file)
