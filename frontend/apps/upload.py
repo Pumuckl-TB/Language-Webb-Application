@@ -92,7 +92,7 @@ def parse_contents(contents, filename):
     elif 'xls' in filename:
         df = pd.read_excel(io.BytesIO(decoded))
 
-    if 'tempus' in df.columns:
+    if 'tempus' in df.columns or 'wordcloud' in df.columns or 'distinction':
         upload_type = 'exercise'
         df.rename(columns={ df.columns[0]: "word_instance" }, inplace = True)
         json_file = df.to_dict()
