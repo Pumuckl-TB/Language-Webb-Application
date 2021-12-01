@@ -37,10 +37,12 @@ engine = create_engine('postgresql://admin_group1:pXysH3Qdhz7ZLhkRgz89mTQCQG@35.
 
 
 
+# Get exercise machine learning
 @app.route('/ml', methods=['GET', 'POST'])
 def ml():
     # ML assign
     # Import required tables
+
     tasks = pd.read_sql('tasks2', engine)
     answers = pd.read_sql('answers2', engine)
     users = pd.read_sql('users2', engine)
@@ -59,17 +61,22 @@ def ml():
 
     # Extract the block id where the specific user has the most trouble
     ml_df_user.sort_values(by='duration', ascending=False)
-    ml_block_name = ml_df_user['block_name'].iloc[0]
+    
+    try:
+        ml_block_name = ml_df_user['block_name'].iloc[0]
 
     # If no block id is found => new user, then assign block_id 1
-    if not ml_block_name:
+    except:
         ml_block_name = 'Die Wanderung'
+
 
     # Assign exc with this specific block_id to the user
     ml_output = ml_df[(ml_df['block_name'] == ml_block_name)]
+    ml_output.drop_duplicates(subset=['text'],inplace=True, keep='first')
 
     # Return as json
     ml_output = ml_output.to_json()
+
 
     return ml_output
 
