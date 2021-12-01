@@ -173,17 +173,20 @@ def update_table(children1, children2, placeholder='update'):
     '''
     This function retrieves the new Dataframe when there is an update.
     '''
-    if placeholder == 'update':
-        placeholder = 'dont update'
-        print('updating table')
-        df = pd.read_json(f'{url_backend}/students')
-        return df.to_dict('records')
+    # if placeholder == 'update':
+    #     placeholder = 'dont update'
+    #     print('updating table')
+    #     df = pd.read_json(f'{url_backend}/students')
+    #     return df.to_dict('records')
 
-    if children1 is not None or children2 is not None:
-        print('updating table')
-        df = pd.read_json(f'{url_backend}/students')
-        return df.to_dict('records')
+    # if children1 is not None or children2 is not None:
+    #     print('updating table')
+    #     df = pd.read_json(f'{url_backend}/students')
+    #     return df.to_dict('records')
         
+    print('updating table')
+    df = pd.read_json(f'{url_backend}/students')
+    return df.to_dict('records')
 
 
 @app.callback(
