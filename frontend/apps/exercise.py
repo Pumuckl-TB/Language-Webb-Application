@@ -366,9 +366,9 @@ def finish_button_press(n_clicks, children, value):
         json_output.dropna(inplace=True)
         json_output = json_output.to_dict(orient='list')
  
-        print(json_output)
-        response = requests.post(f'{url_backend}/returnanswer', json=json_output)
-        print(response.text)
+        # print(json_output)
+        # response = requests.post(f'{url_backend}/returnanswer', json=json_output)
+        # print(response.text)
         
     else:
         pass
