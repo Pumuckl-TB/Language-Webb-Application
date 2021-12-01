@@ -336,7 +336,7 @@ def assign_button_press(n_clicks, student_firstname_lastname, topic_id_temp):
         print(f"assigning  exercise {topic_id_temp} to student {student_firstname_lastname}")
         add = {'item_id':topic_id_temp}
         student_firstname_lastname.update(add)
-        response = requests.post('http://localhost:5000/assignhot', json=student_firstname_lastname)
+        response = requests.post('http://{url_backend}/assignhot', json=student_firstname_lastname)
         print(response.text)
         return f"Succes: Exercise {topic_id_temp} assigned to {student_firstname_lastname.get('name')}"
             
