@@ -95,8 +95,8 @@ def parse_contents(contents, filename):
     if 'word_instance' in df.columns:
         upload_type = 'exercise'
         json_file = df.to_dict()
+        response = requests.post(f'{url_backend}/uploadexc', json=json_file)
         print(json_file)
-        # API CALL HERE
 
     else:
         upload_type = 'word info'
