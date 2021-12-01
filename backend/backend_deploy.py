@@ -140,6 +140,8 @@ def getexercisehot():
     exercise_hot_topics = hot_topics_all[(hot_topics_all['name'] == hot_topics['name']) &
                                          (hot_topics_all['surname'] == hot_topics['surname'])]
 
+    exercise_hot_topics = exercise_hot_topics.drop_duplicates(subset=['text'], keep='first')
+
     exercise_hot_topics = exercise_hot_topics.to_json()
     return exercise_hot_topics
 
@@ -166,11 +168,13 @@ def ml():
     ml_df_user = ml_df[(ml_df['user_id'] == user_id_found)]
 
     # Extract the block id where the specific user has the most trouble
-    ml_df_user.sort_values(by='duration', ascending=False)
-    ml_block_name = ml_df_user['block_name'].iloc[0]
+    ml_df_user.sort_values(by='duration', ascending=False, inplace=True)
+    
+    try:
+        ml_block_name = ml_df_user['block_name'].iloc[0]
 
     # If no block id is found => new user, then assign block_id 1
-    if not ml_block_name:
+    except:
         ml_block_name = 'Die Wanderung'
 
 
@@ -251,7 +255,6 @@ def uploadinfo():
     tasks.to_sql('tasks2', engine, if_exists="replace", method='multi', index=False)
 
     return jsonify({'message': 'word_info uploaded'})
-
 # Upload exercise
 @app.route('/uploadexc', methods=['GET','POST'])
 def uploadexc():
