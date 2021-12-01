@@ -169,10 +169,12 @@ def ml():
 
     # Extract the block id where the specific user has the most trouble
     ml_df_user.sort_values(by='duration', ascending=False)
-    ml_block_name = ml_df_user['block_name'].iloc[0]
+    
+    try:
+        ml_block_name = ml_df_user['block_name'].iloc[0]
 
     # If no block id is found => new user, then assign block_id 1
-    if not ml_block_name:
+    except:
         ml_block_name = 'Die Wanderung'
 
 
