@@ -52,6 +52,11 @@ def uploadexc():
     ####### TASK META VERBS #############################
     #####################################################
 
+    #####################################################
+    ####### FIRST CONDITION IS FOR ######################
+    ####### TASK META VERBS #############################
+    #####################################################
+
     if upload.iloc[0]['word_type'] == 'verb':
         # --------------------------------------------------------#
         # --------- APPEND TO INSTRUCTION TABLE ------------------#
@@ -83,11 +88,12 @@ def uploadexc():
         # We need several columns
         column_list = ["word_instance", "word_type", "basic_form", "text", "task_level", "item_id",
                        "block", "block_name", "paragraph_id", "paragraph_order", "task_order", "display",
-                       "wordcloud", "instruction_id", "type", "modus", "tempus",  "person"] # "word_number",
+                       "wordcloud", "instruction_id", "type", "modus", "tempus", "person"]  # "word_number",
 
         new_TMverbs = new_TMverbs[["word_instance", "word_type", "basic_form", "text", "task_level", "item_id",
                                    "block", "block_name", "paragraph_id", "paragraph_order", "task_order", "display",
-                                   "wordcloud", "instruction_id", "type", "modus", "tempus",  "person"]] # "word_number",
+                                   "wordcloud", "instruction_id", "type", "modus", "tempus",
+                                   "person"]]  # "word_number",
 
         new_TMverbs = new_TMverbs.set_axis(column_list, axis=1, inplace=False)
 
@@ -126,12 +132,16 @@ def uploadexc():
                              "block_name", "paragraph_id", "paragraph_order", "task_order", "display", "wordcloud"]],
             ignore_index=True)
 
+        # $$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$
         # Change the column names referring to the illustration.
-        column_list = ["word_instance", "word_type", "basic_form", "text", "task_level", "item_id", "block_id",
-                       "block_name", "paragraph_id", "paragraph_order", "task_order", "display", "wordcloud"]
+        # column_list = ["word_instance", "word_type", "basic_form", "text", "task_level", "item_id", "block_id",
+        # "block_name", "paragraph_id", "paragraph_order", "task_order", "display", "wordcloud"]
 
-        tasks = tasks.set_axis(column_list, axis=1, inplace=False)
-        tasks = pd.merge(tasks, instructions, how='left', on='text')
+        # tasks = tasks.set_axis(column_list, axis=1, inplace=False)
+        # tasks = pd.merge(tasks, instructions, how='left', on='text')
+        # $$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$
+
+
 
         # Generate task_id column as unique identifier
         task_id_list = ["task_id_" + str(x) for x in range(len(tasks))]
@@ -241,12 +251,14 @@ def uploadexc():
                              "block_name", "paragraph_id", "paragraph_order", "task_order", "display", "wordcloud"]],
             ignore_index=True)
 
+        # $$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$
         # Change the column names referring to the illustration.
-        column_list = ["word_instance", "word_type", "basic_form", "text", "task_level", "item_id", "block_id",
-                       "block_name", "paragraph_id", "paragraph_order", "task_order", "display", "wordcloud"]
+        # column_list = ["word_instance", "word_type", "basic_form", "text", "task_level", "item_id", "block_id",
+        #              "block_name", "paragraph_id", "paragraph_order", "task_order", "display", "wordcloud"]
 
-        tasks = tasks.set_axis(column_list, axis=1, inplace=False)
-        tasks = pd.merge(tasks, instructions, how='left', on='text')
+        # tasks = tasks.set_axis(column_list, axis=1, inplace=False)
+        # tasks = pd.merge(tasks, instructions, how='left', on='text')
+        # $$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$
 
         # Generate task_id column as unique identifier
         task_id_list = ["task_id_" + str(x) for x in range(len(tasks))]
@@ -356,12 +368,17 @@ def uploadexc():
                              "block_name", "paragraph_id", "paragraph_order", "task_order", "display", "wordcloud"]],
             ignore_index=True)
 
+        # $$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$
         # Change the column names referring to the illustration.
-        column_list = ["word_instance", "word_type", "basic_form", "text", "task_level", "item_id", "block_id",
-                       "block_name", "paragraph_id", "paragraph_order", "task_order", "display", "wordcloud"]
+        # column_list = ["word_instance", "word_type", "basic_form", "text", "task_level", "item_id", "block_id",
+        #              "block_name", "paragraph_id", "paragraph_order", "task_order", "display", "wordcloud"]
 
-        tasks = tasks.set_axis(column_list, axis=1, inplace=False)
-        tasks = pd.merge(tasks, instructions, how='left', on='text')
+        # tasks = tasks.set_axis(column_list, axis=1, inplace=False)
+        # tasks = pd.merge(tasks, instructions, how='left', on='text')
+        # $$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$
+
+        # Drop duplicates.
+        tasks.drop_duplicates()
 
         # Generate task_id column as unique identifier
         task_id_list = ["task_id_" + str(x) for x in range(len(tasks))]
@@ -389,7 +406,6 @@ def uploadexc():
 
         # --------------------------------------------------------#
         # --------------------------------------------------------#
-
 
     return jsonify({'message': 'exercises uploaded'})
 
