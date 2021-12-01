@@ -59,7 +59,8 @@ app.layout = html.Div(style={'backgroundColor':'#FFFFFF'}, children=[
                     'borderStyle': 'dashed',
                     'borderRadius': '5px',
                     'textAlign': 'center',
-                    'margin': '10px'
+                    'margin': '10px',
+                    'font-family':'arial'
                 },
                 # Allow multiple files to be uploaded
                 multiple=True
