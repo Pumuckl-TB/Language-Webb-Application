@@ -203,8 +203,10 @@ def get_row_info(selected_rows, data):
     print(type(data))
     print(data)
 
-    name = df.loc[selected_rows,'name'].values
-    surname = df.loc[selected_rows,'surname'].values
+    df_new = pd.DataFrame(data=data) 
+
+    name = df_new.loc[selected_rows,'name'].values
+    surname = df_new.loc[selected_rows,'surname'].values
     try:
         json_text = {'name': name[0], 'surname': surname[0]}
     except:
