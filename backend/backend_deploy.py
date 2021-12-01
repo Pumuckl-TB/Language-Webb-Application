@@ -153,7 +153,7 @@ def ml():
     # Import required tables
 
     tasks = pd.read_sql('tasks2', engine)
-    answers = pd.read_sql('answers2', engine).dropna()
+    answers = pd.read_sql('answers2', engine)[0:67]
     users = pd.read_sql('users2', engine)
 
     # load user name
