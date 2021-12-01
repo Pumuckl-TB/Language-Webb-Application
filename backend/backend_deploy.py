@@ -168,7 +168,7 @@ def ml():
     ml_df_user = ml_df[(ml_df['user_id'] == user_id_found)]
 
     # Extract the block id where the specific user has the most trouble
-    ml_df_user.sort_values(by='duration', ascending=False)
+    ml_df_user.sort_values(by='duration', ascending=False, inplace=True)
     
     try:
         ml_block_name = ml_df_user['block_name'].iloc[0]
