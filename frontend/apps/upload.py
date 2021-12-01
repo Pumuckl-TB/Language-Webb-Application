@@ -92,7 +92,7 @@ def parse_contents(contents, filename):
     elif 'xls' in filename:
         df = pd.read_excel(io.BytesIO(decoded))
 
-    if 'word_instance' in df.columns:
+    if 'tempus' in df.columns:
         upload_type = 'exercise'
         json_file = df.to_dict()
         response = requests.post(f'{url_backend}/uploadexc', json=json_file)
