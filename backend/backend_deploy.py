@@ -252,6 +252,361 @@ def uploadinfo():
 
     return jsonify({'message': 'word_info uploaded'})
 
+# Upload exercise
+@app.route('/uploadexc', methods=['GET','POST'])
+def uploadexc():
+    #new_word_info = json.loads(request.data)
+    #new_word_info = pd.read_json(new_word_info)
+    new_word_info = json.loads(request.data)
+    new_word_info = pd.DataFrame.from_dict(new_word_info, orient='index')
+    new_word_info = new_word_info.transpose()
+
+    upload = new_word_info
+    #####################################################
+    ####### FIRST CONDITION IS FOR ######################
+    ####### TASK META VERBS #############################
+    #####################################################
+
+    if upload.iloc[0]['word_type'] == 'verb':
+        # --------------------------------------------------------#
+        # --------- APPEND TO INSTRUCTION TABLE ------------------#
+        # --------------------------------------------------------#
+
+        new_TMverbs = upload
+
+        # Add the new entries to the text column
+        instructions = pd.read_sql('instructions2', engine)
+        instructions = instructions.append(new_TMverbs[['text']])
+        # After appending we want to assign the instruction_id's again.
+        # Then the new entries also have an id.
+        instruction_id_list = ["instruction_id_" + str(x) for x in range(len(instructions))]
+        instructions["instruction_id"] = instruction_id_list
+        # Reset the index to structure the index column
+        instructions = pd.DataFrame(instructions.reset_index())
+        instructions = instructions.drop(columns='index')
+        # Write the updated tasks into the database
+
+        instructions.to_sql('instructions2', engine, if_exists="replace", method='multi', index=False)
+
+        # --------------------------------------------------------#
+        # --------- APPEND TO task_meta_verbs TABLE --------------#
+        # --------------------------------------------------------#
+
+        # Get task_meta_verbs from database
+        task_meta_verbs = pd.read_sql("task_meta_verbs2", engine)
+
+        # We need several columns
+        column_list = ["word_instance", "word_type", "basic_form", "text", "task_level", "item_id",
+                       "block", "block_name", "paragraph_id", "paragraph_order", "task_order", "display",
+                       "wordcloud", "instruction_id", "type", "modus", "tempus",  "person"] # "word_number",
+
+        new_TMverbs = new_TMverbs[["word_instance", "word_type", "basic_form", "text", "task_level", "item_id",
+                                   "block", "block_name", "paragraph_id", "paragraph_order", "task_order", "display",
+                                   "wordcloud", "instruction_id", "type", "modus", "tempus",  "person"]] # "word_number",
+
+        new_TMverbs = new_TMverbs.set_axis(column_list, axis=1, inplace=False)
+
+        # Append new rows
+        task_meta_verbs = task_meta_verbs.append(new_TMverbs)
+
+        # Reset the index to structure the index column
+        task_meta_verbs = pd.DataFrame(task_meta_verbs.reset_index())
+        task_meta_verbs = task_meta_verbs.drop(columns='index')
+
+        # Write the updated word_info into the database
+        task_meta_verbs.to_sql('task_meta_verbs2', engine, if_exists="replace", method='multi', index=False)
+
+        # --------------------------------------------------------#
+        # --------- APPEND TO tasks TABLE ------------------------#
+        # --------------------------------------------------------#
+
+        # Import all three tables apart from task_meta_verbs
+        task_meta_verbs = pd.read_sql("task_meta_verbs2", engine)
+        task_meta_prepositions = pd.read_sql("task_meta_prepositions2", engine)
+        task_meta_other = pd.read_sql("task_meta_other2", engine)
+        instructions = pd.read_sql("instructions2", engine)
+
+        # We need several columns from several df's.
+        tasks = task_meta_verbs[["word_instance", "word_type", "basic_form", "text", "task_level", "item_id", "block",
+                                 "block_name", "paragraph_id", "paragraph_order", "task_order", "display", "wordcloud"]]
+
+        tasks = tasks.append(task_meta_prepositions[
+                                 ["word_instance", "word_type", "basic_form", "text", "task_level", "item_id", "block",
+                                  "block_name", "paragraph_id", "paragraph_order", "task_order", "display",
+                                  "wordcloud"]],
+                             ignore_index=True)
+
+        tasks = tasks.append(
+            task_meta_other[["word_instance", "word_type", "basic_form", "text", "task_level", "item_id", "block",
+                             "block_name", "paragraph_id", "paragraph_order", "task_order", "display", "wordcloud"]],
+            ignore_index=True)
+
+        # Change the column names referring to the illustration.
+        column_list = ["word_instance", "word_type", "basic_form", "text", "task_level", "item_id", "block_id",
+                       "block_name", "paragraph_id", "paragraph_order", "task_order", "display", "wordcloud"]
+
+        tasks = tasks.set_axis(column_list, axis=1, inplace=False)
+        tasks = pd.merge(tasks, instructions, how='left', on='text')
+
+        # Generate task_id column as unique identifier
+        task_id_list = ["task_id_" + str(x) for x in range(len(tasks))]
+        tasks["task_id"] = task_id_list
+
+        # Write tasks into database
+        tasks.to_sql('tasks2', engine, if_exists="replace", method='multi', index=False)
+
+        # --------------------------------------------------------#
+        # --------- LINK TM-TABLES TO TASKS WITH task_id ---------#
+        # --------------------------------------------------------#
+
+        # Link the meta-tables with tasks by task_id
+        task_meta_verbs = pd.merge(task_meta_verbs, tasks[["basic_form", "task_id"]], how="left",
+                                   on=["basic_form", "task_id"])
+        task_meta_prepositions = pd.merge(task_meta_prepositions, tasks[["text", "task_id"]], how="left",
+                                          on=["text", "task_id"])
+        task_meta_other = pd.merge(task_meta_other, tasks[["text", "task_id"]], how="left", on=["text", "task_id"])
+
+        # Write the meta-tables in the database
+        task_meta_verbs.to_sql('task_meta_verbs2', engine, if_exists="replace", method='multi', index=False)
+        task_meta_prepositions.to_sql('task_meta_prepositions2', engine, if_exists="replace", method='multi',
+                                      index=False)
+        task_meta_other.to_sql('task_meta_other2', engine, if_exists="replace", method='multi', index=False)
+
+        # --------------------------------------------------------#
+        # --------------------------------------------------------#
+        # --------------------------------------------------------#
+
+    #####################################################
+    ####### SECOND CONDITION IS FOR #####################
+    ####### TASK META PREPOSITION #######################
+    #####################################################
+
+    elif upload.iloc[0]['word_type'] == 'preposition':
+        # if upload.iloc[0]['word_type'] == 'preposition':
+        # --------------------------------------------------------#
+        # --------- APPEND TO INSTRUCTION TABLE ------------------#
+        # --------------------------------------------------------#
+
+        new_TMprepositions = upload
+
+        # Add the new entries to the text column
+        instructions = pd.read_sql('instructions2', engine)
+        instructions = instructions.append(new_TMprepositions[['text']])
+        # After appending we want to assign the instruction_id's again.
+        # Then the new entries also have an id.
+        instruction_id_list = ["instruction_id_" + str(x) for x in range(len(instructions))]
+        instructions["instruction_id"] = instruction_id_list
+        # Reset the index to structure the index column
+        instructions = pd.DataFrame(instructions.reset_index())
+        instructions = instructions.drop(columns='index')
+
+        # Write the updated tasks into the database
+        instructions.to_sql('instructions2', engine, if_exists="replace", method='multi', index=False)
+
+        # --------------------------------------------------------#
+        # --------- APPEND TO task_meta_prepositions TABLE -------#
+        # --------------------------------------------------------#
+
+        # Get task_meta_prepositions from database
+        task_meta_prepositions = pd.read_sql("task_meta_prepositions2", engine)
+
+        # We need several columns
+        column_list = ["word_instance", "word_type", "basic_form", "text", "task_level", "item_id", "block",
+                       "block_name", "paragraph_id", "paragraph_order", "task_order", "display", "wordcloud"]
+
+        new_TMprepositions = new_TMprepositions[
+            ["word_instance", "word_type", "basic_form", "text", "task_level", "item_id", "block",
+             "block_name", "paragraph_id", "paragraph_order", "task_order", "display", "wordcloud"]]
+
+        new_TMprepositions = new_TMprepositions.set_axis(column_list, axis=1, inplace=False)
+
+        # Append new rows
+        task_meta_prepositions = task_meta_prepositions.append(new_TMprepositions)
+
+        # Reset the index to structure the index column
+        task_meta_prepositions = pd.DataFrame(task_meta_prepositions.reset_index())
+        task_meta_prepositions = task_meta_prepositions.drop(columns='index')
+
+        # Write the updated word_info into the database
+        task_meta_prepositions.to_sql('task_meta_prepositions2', engine, if_exists="replace", method='multi',
+                                      index=False)
+
+        # --------------------------------------------------------#
+        # --------- APPEND TO tasks TABLE ------------------------#
+        # --------------------------------------------------------#
+
+        # Import all three tables apart from task_meta_verbs
+        task_meta_verbs = pd.read_sql("task_meta_verbs2", engine)
+        task_meta_prepositions = pd.read_sql("task_meta_prepositions2", engine)
+        task_meta_other = pd.read_sql("task_meta_other2", engine)
+        instructions = pd.read_sql("instructions2", engine)
+
+        # We need several columns from several df's.
+        tasks = task_meta_verbs[["word_instance", "word_type", "basic_form", "text", "task_level", "item_id", "block",
+                                 "block_name", "paragraph_id", "paragraph_order", "task_order", "display", "wordcloud"]]
+
+        tasks = tasks.append(task_meta_prepositions[
+                                 ["word_instance", "word_type", "basic_form", "text", "task_level", "item_id", "block",
+                                  "block_name", "paragraph_id", "paragraph_order", "task_order", "display",
+                                  "wordcloud"]],
+                             ignore_index=True)
+
+        tasks = tasks.append(
+            task_meta_other[["word_instance", "word_type", "basic_form", "text", "task_level", "item_id", "block",
+                             "block_name", "paragraph_id", "paragraph_order", "task_order", "display", "wordcloud"]],
+            ignore_index=True)
+
+        # Change the column names referring to the illustration.
+        column_list = ["word_instance", "word_type", "basic_form", "text", "task_level", "item_id", "block_id",
+                       "block_name", "paragraph_id", "paragraph_order", "task_order", "display", "wordcloud"]
+
+        tasks = tasks.set_axis(column_list, axis=1, inplace=False)
+        tasks = pd.merge(tasks, instructions, how='left', on='text')
+
+        # Generate task_id column as unique identifier
+        task_id_list = ["task_id_" + str(x) for x in range(len(tasks))]
+        tasks["task_id"] = task_id_list
+
+        # Write tasks into database
+        tasks.to_sql('tasks2', engine, if_exists="replace", method='multi', index=False)
+
+        # --------------------------------------------------------#
+        # --------- LINK TM-TABLES TO TASKS WITH task_id ---------#
+        # --------------------------------------------------------#
+
+        # Link the meta-tables with tasks by task_id
+        task_meta_verbs = pd.merge(task_meta_verbs, tasks[["basic_form", "task_id"]], how="left",
+                                   on=["basic_form", "task_id"])
+        task_meta_prepositions = pd.merge(task_meta_prepositions, tasks[["text", "task_id"]], how="left",
+                                          on=["text", "task_id"])
+        task_meta_other = pd.merge(task_meta_other, tasks[["text", "task_id"]], how="left", on=["text", "task_id"])
+
+        # Write the meta-tables in the database
+        task_meta_verbs.to_sql('task_meta_verbs2', engine, if_exists="replace", method='multi', index=False)
+        task_meta_prepositions.to_sql('task_meta_prepositions2', engine, if_exists="replace", method='multi',
+                                      index=False)
+        task_meta_other.to_sql('task_meta_other2', engine, if_exists="replace", method='multi', index=False)
+
+        # --------------------------------------------------------#
+        # --------------------------------------------------------#
+        # --------------------------------------------------------#
+
+
+    #####################################################
+    ####### ELSE CONDITION IS FOR #######################
+    ####### TASK META OTHER #############################
+    #####################################################
+
+    else:
+
+        # --------------------------------------------------------#
+        # --------- APPEND TO INSTRUCTION TABLE ------------------#
+        # --------------------------------------------------------#
+
+        new_TMother = upload
+
+        # Add the new entries to the text column
+        instructions = pd.read_sql('instructions2', engine)
+        instructions = instructions.append(new_TMother[['text']])
+        # After appending we want to assign the instruction_id's again.
+        # Then the new entries also have an id.
+        instruction_id_list = ["instruction_id_" + str(x) for x in range(len(instructions))]
+        instructions["instruction_id"] = instruction_id_list
+        # Reset the index to structure the index column
+        instructions = pd.DataFrame(instructions.reset_index())
+        instructions = instructions.drop(columns='index')
+
+        # Write the updated tasks into the database
+        instructions.to_sql('instructions2', engine, if_exists="replace", method='multi', index=False)
+
+        # --------------------------------------------------------#
+        # --------- APPEND TO task_meta_other TABLE --------------#
+        # --------------------------------------------------------#
+
+        # Get task_meta_verbs from database
+        task_meta_other = pd.read_sql("task_meta_other2", engine)
+
+        # We need several columns
+        column_list = ["word_instance", "word_type", "basic_form", "text", "task_level", "item_id", "block",
+                       "block_name", "paragraph_id", "paragraph_order", "task_order", "display", "wordcloud"]
+
+        new_TMother = new_TMother[["word_instance", "word_type", "basic_form", "text", "task_level", "item_id", "block",
+                                   "block_name", "paragraph_id", "paragraph_order", "task_order", "display",
+                                   "wordcloud"]]
+
+        new_TMother = new_TMother.set_axis(column_list, axis=1, inplace=False)
+
+        # Append new rows
+        task_meta_other = task_meta_other.append(new_TMother)
+
+        # Reset the index to structure the index column
+        task_meta_other = pd.DataFrame(task_meta_other.reset_index())
+        task_meta_other = task_meta_other.drop(columns='index')
+
+        # Write the updated word_info into the database
+        task_meta_other.to_sql('task_meta_other2', engine, if_exists="replace", method='multi', index=False)
+
+        # --------------------------------------------------------#
+        # --------- APPEND TO tasks TABLE ------------------------#
+        # --------------------------------------------------------#
+
+        # Import all three tables apart from task_meta_verbs
+        task_meta_verbs = pd.read_sql("task_meta_verbs2", engine)
+        task_meta_prepositions = pd.read_sql("task_meta_prepositions2", engine)
+        task_meta_other = pd.read_sql("task_meta_other2", engine)
+        instructions = pd.read_sql("instructions2", engine)
+
+        # We need several columns from several df's.
+        tasks = task_meta_verbs[["word_instance", "word_type", "basic_form", "text", "task_level", "item_id", "block",
+                                 "block_name", "paragraph_id", "paragraph_order", "task_order", "display", "wordcloud"]]
+
+        tasks = tasks.append(task_meta_prepositions[
+                                 ["word_instance", "word_type", "basic_form", "text", "task_level", "item_id", "block",
+                                  "block_name", "paragraph_id", "paragraph_order", "task_order", "display",
+                                  "wordcloud"]],
+                             ignore_index=True)
+
+        tasks = tasks.append(
+            task_meta_other[["word_instance", "word_type", "basic_form", "text", "task_level", "item_id", "block",
+                             "block_name", "paragraph_id", "paragraph_order", "task_order", "display", "wordcloud"]],
+            ignore_index=True)
+
+        # Change the column names referring to the illustration.
+        column_list = ["word_instance", "word_type", "basic_form", "text", "task_level", "item_id", "block_id",
+                       "block_name", "paragraph_id", "paragraph_order", "task_order", "display", "wordcloud"]
+
+        tasks = tasks.set_axis(column_list, axis=1, inplace=False)
+        tasks = pd.merge(tasks, instructions, how='left', on='text')
+
+        # Generate task_id column as unique identifier
+        task_id_list = ["task_id_" + str(x) for x in range(len(tasks))]
+        tasks["task_id"] = task_id_list
+
+        # Write tasks into database
+        tasks.to_sql('tasks2', engine, if_exists="replace", method='multi', index=False)
+
+        # --------------------------------------------------------#
+        # --------- LINK TM-TABLES TO TASKS WITH task_id ---------#
+        # --------------------------------------------------------#
+
+        # Link the meta-tables with tasks by task_id
+        task_meta_verbs = pd.merge(task_meta_verbs, tasks[["basic_form", "task_id"]], how="left",
+                                   on=["basic_form", "task_id"])
+        task_meta_prepositions = pd.merge(task_meta_prepositions, tasks[["text", "task_id"]], how="left",
+                                          on=["text", "task_id"])
+        task_meta_other = pd.merge(task_meta_other, tasks[["text", "task_id"]], how="left", on=["text", "task_id"])
+
+        # Write the meta-tables in the database
+        task_meta_verbs.to_sql('task_meta_verbs2', engine, if_exists="replace", method='multi', index=False)
+        task_meta_prepositions.to_sql('task_meta_prepositions2', engine, if_exists="replace", method='multi',
+                                      index=False)
+        task_meta_other.to_sql('task_meta_other2', engine, if_exists="replace", method='multi', index=False)
+
+        # --------------------------------------------------------#
+        # --------------------------------------------------------#
+
+
+    return jsonify({'message': 'exercises uploaded'})
 
 
 if __name__ == '__main__':
