@@ -38,20 +38,21 @@ For this project to work you will need to have python3 installed. Additionally, 
 ## Folder Structure
     .
     ├── backend                     
-    │   ├── backend_deploy.py       # Backend script containing all functionalities
-    │   └── ML.ipynb                # Machine Learning Notebook showing the random forest specifications
+    │   ├── backend_deploy.py           # Backend script containing all functionalities
+    │   ├── Ml2.ipynb                   # Machine Learning Notebook showing the random forest specifications
+    │   └── Database_Construction.ipynb # Database construction notebook
     ├── frontend                    
-    │   ├── apps                    # Contains all pages (layouts, callbacks, functions)
+    │   ├── apps                        # Contains all pages (layouts, callbacks, functions)
     │   │   ├── __init__.py
-    │   │   ├── admin.py            # Admin layout, callbacks, functions
-    │   │   ├── dashboard.py        # Dashboard layout, callbacks, functions
-    │   │   ├── exercise.py         # Exercise layout, callbacks, functions
-    │   │   └── upload.py           # Upload layout, callbacks, functions
-    │   ├── assets                  # Contains assets used by all pages
-    │   │   └── style.css           # Stylesheet                  
-    │   ├── app.py                  # Creates app and server
-    │   └── index.py                # Main frontend file which renders everything
-    ├── pictures                    # For documentation purposes 
+    │   │   ├── admin.py                # Admin layout, callbacks, functions
+    │   │   ├── dashboard.py            # Dashboard layout, callbacks, functions
+    │   │   ├── exercise.py             # Exercise layout, callbacks, functions
+    │   │   └── upload.py               # Upload layout, callbacks, functions
+    │   ├── assets                      # Contains assets used by all pages
+    │   │   └── style.css               # Stylesheet                  
+    │   ├── app.py                      # Creates app and server
+    │   └── index.py                    # Main frontend file which renders everything
+    ├── pictures                        # For documentation purposes 
     ├── requirements.txt            
     └── readme.md
 
