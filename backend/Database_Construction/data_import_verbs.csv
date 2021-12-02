@@ -1,0 +1,7 @@
+﻿word_instance,word_type,basic_form,text,task_level,item_id,block,block_name,paragraph_id,paragraph_order,task_order,display,wordcloud,instruction_id,type,modus,tempus,number,person
+1,verb,warten,Der Patient [wartet] heute eine Stunde.,A2,123,1,Im Krankenhaus,1,1,1,line-simple,yes,5,main,indicative,present,singular,3
+1,verb,haben,Der Patient [hat] auch gestern eine Stunde [gewartet]. ,A2,130,2,Im Krankenhaus,1,1,1,line-simple,yes,5,auxiliary,indicative,present,singular,3
+1,verb,wollen,Das Kind [hat] ein Eis [gegessen].,A1,130,3,Eltern und Kinder,1,1,1,line-simple,yes,5,modal,indicative,present,singular,3
+1,verb,dürfen,Die Eltern [haben] ihm kein Eis [gegeben].,A1,130,4,Eltern und Kinder,1,1,1,line-simple,yes,5,modal,indicative,present,plural,3
+1,verb,aufstehen,Ich [stehe] immer um 7:00 Uhr [auf].,A2,126,5,Mein Tagesablauf,1,1,1,line-simple,yes,5,main,indicative,present,singular,1
+1,verb,können,Wir [haben] gestern Abend im Restaurant [gegessen].,B1,130,6,Feierabend,1,1,1,line-simple,yes,5,modal,conjunctive_2,present,plural,1

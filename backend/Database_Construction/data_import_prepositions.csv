@@ -1,0 +1,21 @@
+﻿word_instance,word_type,basic_form,text,task_level,item_id,block,block_name,paragraph_id,paragraph_order,task_order,display,wordcloud,instruction_id,didactical_level,function,distinction,aspect_1,aspect_2,expressing,used_with,number,gender,case,case_visibility,contraction,position
+1,preposition,ab,Der Vertrag gilt [ab] 2021.,A1,108,1,Rund um die Zeit,1,1,1,line-simple,yes,25,A1,time,0,start,0,year,0,0,0,D,no,no,front
+1,preposition,ab,Ich bin [ab] März arbeitslos.,A1,108,2,Rund um die Zeit,1,1,1,line-simple,yes,25,A1,time,0,start,0,month,0,0,0,D,no,no,front
+1,preposition,ab,[Ab] Mai habe ich keinen Job mehr.,A1,108,3,Rund um die Zeit,1,1,1,line-simple,yes,25,A1,time,0,start,0,month,0,singular,masculine,D,no,no,front
+1,preposition,ab,Ulrike hat einen Job [ab] Januar.,A1,108,4,Rund um die Zeit,1,1,1,line-simple,yes,25,A1,time,0,start,0,month,0,singular,masculine,D,no,no,front
+1,preposition,ab,[Ab] 9 Uhr ist der Chef immer in der Firma.,A1,108,5,Rund um die Zeit,1,1,1,line-simple,yes,25,A1,time,0,start,0,hour,0,0,0,D,no,no,front
+1,preposition,ab,[Ab] Freitag habe ich Urlaub.,A1,108,6,Alles über Raum,1,1,1,line-simple,yes,25,A1,time,0,start,0,day,0,singular,masculine,D,no,no,front
+1,preposition,an,Wir steigen [an] der nächsten Haltestelle aus.,A1,108,7,Alles über Raum,1,1,1,line-simple,yes,25,A1,place,location,immediate proximity,vertical,building,0,singular,feminine,D,yes,no,front
+1,preposition,an,Heute gehe ich aus. Ich treffe meine Freunde [am/an dem/auf dem] Bismarckplatz.,A1,108,8,Alles über Raum,1,1,1,line-simple,yes,25,A1,place,location,immediate proximity,border,place,0,singular,masculine,D,yes,unknown,front
+1,preposition,an,Wir machen Urlaub [am/an dem] Meer.,A1,108,9,Alles über Raum,1,1,1,line-simple,yes,25,A1,place,location,immediate proximity,border,place,0,singular,neutral,D,yes,yes,front
+1,preposition,an,Das Bild hängt [an] der Wand.,A1,108,10,Alles über Raum,1,1,1,line-simple,yes,25,A1,place,location,immediate proximity,vertical,object,0,singular,feminine,D,yes,no,front
+1,preposition,an,Ich hänge das Bild [an] die Wand.,A1,108,11,Alles über Raum,1,1,1,line-simple,yes,25,A1,place,movement,destination,vertical,object,0,singular,feminine,A,yes,no,front
+1,preposition,an,Das Kind sitzt [am/an dem] Tisch.,A1,108,12,Alles über Raum,1,1,1,line-simple,yes,25,A1,place,location,immediate proximity,vertical,object,0,singular,masculine,D,yes,unknown,front
+1,preposition,an,Wir wandern [an dem/am] Meer entlang.,A1,108,13,Alles über Raum,1,1,1,line-simple,yes,25,A1,place,location,immediate proximity,border,place,entlang,singular,neutral,D,yes,unknown,front
+1,preposition,an,Ich sehe viele Sterne [am/an dem] Himmel.,A1,108,14,Alles über Raum,1,1,1,line-simple,yes,25,A1,place,location,immediate proximity,ceiling,place,0,singular,neutral,D,yes,unknown,front
+1,preposition,an,Das Schiff hat viele Touristen [an] Bord.,A1,108,15,Alles über Raum,1,1,1,line-simple,yes,25,A1,place,location,immediate proximity,vertical,place,0,singular,neutral,D,no,no,front
+1,preposition,an,Man trägt den Ring [am/an dem] Ringfinger.,A1,108,16,Alles über Raum,1,1,1,line-simple,yes,25,A1,place,location,immediate proximity,vertical,object,0,singular,masculine,D,yes,unknown,front
+1,preposition,an,Der IT-Spezialist arbeitet viele Stunden [am/an dem] Computer.,A1,108,17,Alles über Raum,1,1,1,line-simple,yes,25,A1,place,location,immediate proximity,vertical,object,0,singular,masculine,D,yes,unknown,front
+1,preposition,an,Der Maler steht [am/an dem] Fenster und betrachtet die Landschaft.,A1,108,18,Alles über Raum,1,1,1,line-simple,yes,25,A1,place,location,immediate proximity,vertical,object,0,singular,neutral,D,yes,unknown,front
+1,preposition,an,Wir sind reich. Wir haben ein Haus [am/an dem] Meer.,A1,108,19,Alles über Raum,1,1,1,line-simple,yes,25,A1,place,location,immediate proximity,border,place,0,singular,neutral,D,yes,unknown,front
+1,preposition,an,Die schöne Villa liegt [am/an dem] Neckar.,A1,108,20,Alles über Raum,1,1,1,line-simple,yes,25,A1,place,location,immediate proximity,border,place,0,singular,masculine,D,yes,unknown,front
