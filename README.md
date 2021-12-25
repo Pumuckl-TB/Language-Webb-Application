@@ -58,7 +58,8 @@ For this project to work you will need to have python3 installed. Additionally, 
 
 ## Architecture
 
-There are no direct connections from frontend to database, which allows for a modular architecture. The architecture is depicted in the picture below.
+There are no direct connections from frontend to database, which allows for a modular architecture. The architecture and information flow is depicted in the pictures below.
 
 ![Architecture](https://github.com/feljost/Language-WebApp/blob/main/pictures/architecture.JPG?raw=true)
 
+![Information Flow](https://github.com/feljost/Language-WebApp/blob/main/pictures/information_flow.png?raw=true)
